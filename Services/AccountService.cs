@@ -56,15 +56,14 @@ public class AccountService : IAccountService
 
     public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
     {
-        var account = _context.Accounts.SingleOrDefault(x => x.Email == model.Email);
-        var roles = _context.AccountRole.Where(x => x.AccountId == account.Id).Include("Role").Select(x => x.Role).ToList();
+        var account = _context.Accounts.Include(x => x.Roles).SingleOrDefault(x => x.Email == model.Email);
 
         // validate
         if (account == null || !account.IsVerified || !BCrypt.Verify(model.Password, account.PasswordHash))
             throw new AppException("Email or password is incorrect");
 
         // authentication successful so generate jwt and refresh tokens
-        var jwtToken = _jwtUtils.GenerateJwtToken(account, roles);
+        var jwtToken = _jwtUtils.GenerateJwtToken(account);
         var refreshToken = _jwtUtils.GenerateRefreshToken(ipAddress);
         account.RefreshTokens.Add(refreshToken);
 
@@ -78,14 +77,13 @@ public class AccountService : IAccountService
         var response = _mapper.Map<AuthenticateResponse>(account);
         response.JwtToken = jwtToken;
         response.RefreshToken = refreshToken.Token;
-        response.Role = roles;
         return response;
     }
 
     public AuthenticateResponse RefreshToken(string token, string ipAddress)
     {
         var account = getAccountByRefreshToken(token);
-        var roles = _context.AccountRole.Where(x => x.AccountId == account.Id).Include("Role").Select(x => x.Role).ToList();
+        var roles = _context.Accounts.Where(x => x.Id == account.Id).Include("Role").Select(x => x.Roles).ToList();
         var refreshToken = account.RefreshTokens.Single(x => x.Token == token);
 
         if (refreshToken.IsRevoked)
@@ -111,7 +109,7 @@ public class AccountService : IAccountService
         _context.SaveChanges();
 
         // generate new jwt
-        var jwtToken = _jwtUtils.GenerateJwtToken(account, roles);
+        var jwtToken = _jwtUtils.GenerateJwtToken(account);
 
         // return data in authenticate response object
         var response = _mapper.Map<AuthenticateResponse>(account);
@@ -221,7 +219,7 @@ public class AccountService : IAccountService
 
     public IEnumerable<AccountResponse> GetAll()
     {
-        var accounts = _context.Accounts;
+        var accounts = _context.Accounts.Include(x => x.Roles).ToList();
         return _mapper.Map<IList<AccountResponse>>(accounts);
     }
 

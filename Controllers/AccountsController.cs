@@ -49,7 +49,7 @@ public class AccountsController : BaseController
             return BadRequest(new { message = "Token is required" });
 
         // users can revoke their own tokens and admins can revoke any tokens
-        if (!Account.OwnsToken(token) && Account.AccountRole.ToList().Find(x => x.Role.Name == RoleEnum.ADMIN) != null)
+        if (!Account.OwnsToken(token) && Account.Roles.ToList().Find(x => x.Name == RoleEnum.ADMIN) != null)
             return Unauthorized(new { message = "Unauthorized" });
 
         _accountService.RevokeToken(token, ipAddress());
@@ -108,7 +108,7 @@ public class AccountsController : BaseController
     public ActionResult<AccountResponse> GetById(Guid id)
     {
         // users can get their own account and admins can get any account
-        if (id != Account.Id && Account.AccountRole.ToList().Find(x => x.Role.Name == RoleEnum.ADMIN) != null)
+        if (id != Account.Id && Account.Roles.Find(x => x.Name == RoleEnum.ADMIN) != null)
             return Unauthorized(new { message = "Unauthorized" });
 
         var account = _accountService.GetById(id);
@@ -127,11 +127,11 @@ public class AccountsController : BaseController
     public ActionResult<AccountResponse> Update(Guid id, UpdateRequest model)
     {
         // users can update their own account and admins can update any account
-        if (id != Account.Id && Account.AccountRole.ToList().Find(x => x.Role.Name == RoleEnum.ADMIN) != null)
+        if (id != Account.Id && Account.Roles.Find(x => x.Name == RoleEnum.ADMIN) != null)
             return Unauthorized(new { message = "Unauthorized" });
 
         // only admins can update role
-        if (Account.AccountRole.ToList().Find(x => x.Role.Name == RoleEnum.ADMIN) != null)
+        if (Account.Roles.Find(x => x.Name == RoleEnum.ADMIN) != null)
             model.Role = null;
 
         var account = _accountService.Update(id, model);
@@ -142,7 +142,7 @@ public class AccountsController : BaseController
     public IActionResult Delete(Guid id)
     {
         // users can delete their own account and admins can delete any account
-        if (id != Account.Id && Account.AccountRole.ToList().Find(x => x.Role.Name == RoleEnum.ADMIN) != null)
+        if (id != Account.Id && Account.Roles.Find(x => x.Name == RoleEnum.ADMIN) != null)
             return Unauthorized(new { message = "Unauthorized" });
 
         _accountService.Delete(id);

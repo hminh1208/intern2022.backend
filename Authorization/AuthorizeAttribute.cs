@@ -24,10 +24,10 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
         // authorization
         var account = (Account)context.HttpContext.Items["Account"];
 
-        var a = account.AccountRole.Select(x => x.Role.Name).ToArray();
+        var a = account.Roles.Select(x => x.Name).ToArray();
         var b = _roles.Intersect(a).Any();
 
-        if (account == null || (_roles.Any() && !_roles.Intersect(account.AccountRole.Select(x => x.Role.Name).ToArray()).Any()))
+        if (account == null || (_roles.Any() && !_roles.Intersect(account.Roles.Select(x => x.Name).ToArray()).Any()))
         {
             // not logged in or role not authorized
             context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };

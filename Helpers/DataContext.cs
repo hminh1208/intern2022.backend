@@ -7,7 +7,6 @@ public class DataContext : DbContext
 {
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Role> Roles { get; set; }
-    public DbSet<AccountRole> AccountRole { get; set; }
 
     private readonly IConfiguration Configuration;
 
@@ -24,6 +23,5 @@ public class DataContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<AccountRole>().HasKey(e => new { e.RoleId, e.AccountId });
     }
 }

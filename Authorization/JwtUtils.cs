@@ -12,7 +12,7 @@ using WebApi.Helpers;
 
 public interface IJwtUtils
 {
-    public string GenerateJwtToken(Account account, List<Role> roles);
+    public string GenerateJwtToken(Account account);
     public Guid? ValidateJwtToken(string token);
     public RefreshToken GenerateRefreshToken(string ipAddress);
 }
@@ -30,7 +30,7 @@ public class JwtUtils : IJwtUtils
         _appSettings = appSettings.Value;
     }
 
-    public string GenerateJwtToken(Account account, List<Role> roles)
+    public string GenerateJwtToken(Account account)
     {
         // generate token that is valid for 15 minutes
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -38,7 +38,7 @@ public class JwtUtils : IJwtUtils
 
         List<Claim> claims = new List<Claim>();
         claims.Add(new Claim("id", account.Id.ToString()));
-        roles.ForEach(x => claims.Add(new Claim(ClaimTypes.Role, x.Name)));
+        account.Roles.ForEach(x => claims.Add(new Claim(ClaimTypes.Role, x.Name)));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

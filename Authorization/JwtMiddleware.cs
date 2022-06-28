@@ -22,7 +22,7 @@ public class JwtMiddleware
         if (accountId != null)
         {
             // attach account to context on successful jwt validation
-            context.Items["Account"] = dataContext.Accounts.Include("AccountRole.Role").Where(x => x.Id == accountId).FirstOrDefault();
+            context.Items["Account"] = dataContext.Accounts.Include(x => x.Roles).Where(x => x.Id == accountId).FirstOrDefault();
         }
 
         await _next(context);

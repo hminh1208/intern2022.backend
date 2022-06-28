@@ -21,7 +21,7 @@ public class Account
     public DateTime? Updated { get; set; }
     public List<RefreshToken> RefreshTokens { get; set; }
     [JsonIgnore]
-    public IList<AccountRole> AccountRole { get; set; }
+    public List<Role> Roles { get; set; }
 
     public bool OwnsToken(string token) 
     {
