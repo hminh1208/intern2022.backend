@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿global using WebApi.Helpers;
+global using WebApi.Services;
+global using WebApi.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WebApi.Authorization;
-using WebApi.Helpers;
-using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<IJwtUtils, JwtUtils>();
     services.AddScoped<IAccountService, AccountService>();
     services.AddScoped<IEmailService, EmailService>();
+    services.AddScoped<ICityService, CityService>();
 }
 
 var app = builder.Build();
