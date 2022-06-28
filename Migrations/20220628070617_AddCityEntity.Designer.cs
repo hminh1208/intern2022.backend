@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Helpers;
 
@@ -11,9 +12,10 @@ using WebApi.Helpers;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220628070617_AddCityEntity")]
+    partial class AddCityEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,38 +106,6 @@ namespace WebApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Cities");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            AbbName = "",
-                            Name = "Hà Nội"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            AbbName = "",
-                            Name = "Hồ Chi Minh"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            AbbName = "",
-                            Name = "Đà Nẵng"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            AbbName = "",
-                            Name = "Quảng Nam"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            AbbName = "",
-                            Name = "Lạng Sơn"
-                        });
                 });
 
             modelBuilder.Entity("WebApi.Entities.Role", b =>
