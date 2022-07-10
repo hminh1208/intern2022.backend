@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Authorization;
+using WebApi.Models.Cities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,6 +29,35 @@ namespace WebApi.Controllers
         {
             var cities = _cityService.getById(id);
             return Ok(cities);
+        }
+
+        [HttpPost]
+        public ActionResult<City> add([FromBody]CityDto cityDto)
+        {
+            City result = null;
+            if (ModelState.IsValid)
+            {
+                result = _cityService.add(cityDto);
+            }
+            return Ok(result);
+        }
+
+        [HttpPost("{id}")]
+        public ActionResult<City> update(int id, [FromBody] CityDto cityDto)
+        {
+            City result = null;
+            if (ModelState.IsValid)
+            {
+                result = _cityService.update(id, cityDto);
+            }
+            return Ok(result);
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult<City> delete(int id)
+        {
+            City result = _cityService.delete(id);
+            return Ok(result);
         }
     }
 }
