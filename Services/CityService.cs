@@ -4,11 +4,11 @@ namespace WebApi.Services
 {
     public interface ICityService
     {
-        List<City> getAll();
-        City getById(int id);
-        City add(CityDto cityDto);
-        City update(int id, CityDto cityDto);
-        City delete(int id);
+        Task<List<City>> getAll();
+        Task<City> getById(int id);
+        Task<City> addAsync(CityDto cityDto);
+        Task<City> updateAsync(int id, CityDto cityDto);
+        Task<City> deleteAsync(int id);
     }
     public class CityService : ICityService
     {
@@ -19,44 +19,44 @@ namespace WebApi.Services
             _context = dataContext;
         }
 
-        public City add(CityDto cityDto)
+        public async Task<City> addAsync(CityDto cityDto)
         {
             City newCity = new City(cityDto.Name, cityDto.AbbName);
             this._context.Add(newCity);
-            this._context.SaveChanges();
+            await this._context.SaveChangesAsync();
             return newCity;
         }
 
-        public City delete(int id)
+        public async Task<City> deleteAsync(int id)
         {
-            City existCity = this._context.Cities.Find(id);
+            City existCity = await this.getById(id);
             if (existCity != null)
             {
                 this._context.Remove(existCity);
-                this._context.SaveChanges();
+                await this._context.SaveChangesAsync();
             }
             return existCity;
         }
 
-        public List<City> getAll()
+        public async Task<List<City>> getAll()
         {
-            return _context.Cities.ToList();
+            return await _context.Cities.ToListAsync();
         }
 
-        public City getById(int id)
+        public async Task<City> getById(int id)
         {
-            return _context.Cities.Where(c => c.Id == id).FirstOrDefault();
+            return await _context.Cities.Where(c => c.Id == id).FirstOrDefaultAsync();
         }
 
-        public City update(int id, CityDto cityDto)
+        public async Task<City> updateAsync(int id, CityDto cityDto)
         {
-            City existCity = this._context.Cities.Find(id);
+            City existCity = await this.getById(id);
             if(existCity != null)
             {
                 existCity.Name = cityDto.Name;
                 existCity.AbbName = cityDto.AbbName;
                 this._context.Update(existCity);
-                this._context.SaveChanges();
+                await this._context.SaveChangesAsync();
             }
             return existCity;
         }

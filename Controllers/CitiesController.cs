@@ -18,45 +18,45 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<City>> Get()
+        public async Task<ActionResult<List<City>>> GetAsync()
         {
-            var cities = _cityService.getAll();
+            var cities = await _cityService.getAll();
             return Ok(cities);
         }
 
         [HttpGet("{id}")]
-        public ActionResult<City> Get(int id)
+        public async Task<ActionResult<City>> GetAsync(int id)
         {
-            var cities = _cityService.getById(id);
+            var cities = await _cityService.getById(id);
             return Ok(cities);
         }
 
         [HttpPost]
-        public ActionResult<City> add([FromBody]CityDto cityDto)
+        public async Task<ActionResult<City>> addAsync([FromBody]CityDto cityDto)
         {
             City result = null;
             if (ModelState.IsValid)
             {
-                result = _cityService.add(cityDto);
+                result = await _cityService.addAsync(cityDto);
             }
             return Ok(result);
         }
 
         [HttpPost("{id}")]
-        public ActionResult<City> update(int id, [FromBody] CityDto cityDto)
+        public async Task<ActionResult<City>> updateAsync(int id, [FromBody] CityDto cityDto)
         {
             City result = null;
             if (ModelState.IsValid)
             {
-                result = _cityService.update(id, cityDto);
+                result = await _cityService.updateAsync(id, cityDto);
             }
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<City> delete(int id)
+        public async Task<ActionResult<City>> deleteAsync(int id)
         {
-            City result = _cityService.delete(id);
+            City result = await _cityService.deleteAsync(id);
             return Ok(result);
         }
     }

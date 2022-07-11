@@ -1,7 +1,7 @@
 ﻿global using WebApi.Helpers;
 global using WebApi.Services;
 global using WebApi.Entities;
-using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WebApi.Authorization;
 
