@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<List<City>>> GetAsync()
         {
-            var cities = await _cityService.getAll();
+            var cities = await _cityService.getAlls();
             return Ok(cities);
         }
 
