@@ -8,6 +8,7 @@ public class DataContext : DbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Role> Roles { get; set; }
     public DbSet<City> Cities { get; set; }
+    public DbSet<CategoryCity> CategoryCities { get; set; }
 
     private readonly IConfiguration Configuration;
 
