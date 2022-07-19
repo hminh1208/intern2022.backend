@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models.CategoryCities;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CategoryCitiesController : BaseController
     {
         private readonly ICategoryCityService categoryCityService;
@@ -16,43 +17,47 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("Get-all")]
-        public List<CategoryCity> GetAll()
+        public async Task<ActionResult<List<CategoryCity>>> GetAll()
         {
-            return categoryCityService.GetAll();
+            var newcategorycity = await categoryCityService.GetAll();
+            return Ok(newcategorycity);
         }
 
         [HttpGet("Get-category-city-/{id}")]
-        public CategoryCity GetById(int id)
+        public async Task<ActionResult<CategoryCity>> GetById(int id)
         {
-            return categoryCityService.GetById(id);
+            var newcategotycity = await categoryCityService.GetById(id);
+            return Ok(newcategotycity);
         }
 
         [HttpPost("Add-new-category-city")]
-        public async void AddCategoryCity(string name, string shortname, int status)
+        public async Task<ActionResult<CategoryCity>> AddCategoryCity([FromBody] CategoryCityDto categoryCityDto)
         {
-            if (name != null && shortname != null && status != 0)
+            CategoryCity result = null;
+            if (ModelState.IsValid)
             {
-                categoryCityService.AddCategoryCity(name, shortname, status);
+                result = await categoryCityService.AddCategoryCity(categoryCityDto);
             }    
+            return Ok(result);
         }
 
         [HttpPost("Edit-category-cty-/{id}")]
-        public async void EditCategoryCity(int id,string name, string shortname, int status)
+        public async Task<ActionResult<CategoryCity>> EditCategoryCity(int id,[FromBody] CategoryCityDto categoryCityDto)
         {
-            if (name != null && shortname != null && status != 0)
+            CategoryCity result = null;
+            if (ModelState.IsValid)
             {
-                CategoryCity categoryCity = categoryCityService.GetById(id);
-                categoryCity.Name = name;
-                categoryCity.ShortName = shortname;
-                categoryCity.Status = status;
-                categoryCityService.EditCategoryCity(id, name, shortname, status);
+                result = await categoryCityService.EditCategoryCity(id, categoryCityDto);
             }
+            return Ok(result);
         }
 
         [HttpDelete("Remove-category-city-/{id}")]
-        public void DeleteCategoryCity(int id)
+        public async Task<ActionResult<CategoryCity>> DeleteCategoryCity(int id)
         {
-            categoryCityService.DeleteCategoryCity(id);
+            CategoryCity result = await categoryCityService.DeleteCategoryCity(id);
+            //return Ok(new { message = "Account deleted successfully" });
+            return Ok(result);
         }
     }
 }

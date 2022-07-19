@@ -1,13 +1,15 @@
-﻿namespace WebApi.Services
+﻿using WebApi.Enums;
+using WebApi.Models.CategoryCities;
+
+namespace WebApi.Services
 {
     public interface ICategoryCityService
     {
-        List<CategoryCity> GetAll();
-        CategoryCity GetById(int id);
-        List<CategoryCity> GetById(string name, string shortname, int status);
-        public void AddCategoryCity(string name, string shortname, int status);
-        public void EditCategoryCity(int id, string name, string shortname, int status);
-        public void DeleteCategoryCity(int id);
+        Task<List<CategoryCity>> GetAll();
+        Task<CategoryCity> GetById(int id);
+        Task<CategoryCity> AddCategoryCity(CategoryCityDto categoryCityDto);
+        Task<CategoryCity> EditCategoryCity(int id, CategoryCityDto categoryCityDtos);
+        Task<CategoryCity> DeleteCategoryCity(int id);
 
     }
     public class CategoryCityService : ICategoryCityService
@@ -19,53 +21,61 @@
             this.dataContext = dataContext;
         }
 
-        public async void AddCategoryCity(string name, string shortname, int status)
+        public async Task<CategoryCity> AddCategoryCity(CategoryCityDto categoryCityDto)
         {
-            CategoryCity categoryCity = new CategoryCity();
-            categoryCity.Name = name;
-            categoryCity.ShortName = shortname;
-            categoryCity.Status = status;
-            this.dataContext.CategoryCities.Add(categoryCity);
-            this.dataContext.SaveChanges();
-        }
-
-        public void DeleteCategoryCity(int id)
-        {
-            CategoryCity existedCategoryCity = this.GetById(id);
-            if(existedCategoryCity != null)
+            CategoryCity newCategoryCity = new CategoryCity();
+            if (dataContext.CategoryCities.Any(x => x.Name == categoryCityDto.Name) || dataContext.CategoryCities.Any(x => x.ShortName == categoryCityDto.ShortName))
             {
-                this.dataContext.CategoryCities.Remove(existedCategoryCity);
-                this.dataContext.SaveChanges();
+                return newCategoryCity = null;
+            }  
+            else
+            {
+                newCategoryCity.Name = categoryCityDto.Name;
+                newCategoryCity.ShortName = categoryCityDto.ShortName;
+                newCategoryCity.Status = (int)StatusEnum.DRAFT;
+
+                this.dataContext.Add(newCategoryCity);
+                await this.dataContext.SaveChangesAsync();
+                return newCategoryCity;
             }    
+            return newCategoryCity;
         }
 
-        public async void EditCategoryCity(int id, string name, string shortname, int status)
+        public async Task<CategoryCity> DeleteCategoryCity(int id)
         {
-            CategoryCity existedCategoryCity = this.GetById(id);
-            if (existedCategoryCity != null)
+            CategoryCity newCategoryCity = await this.GetById(id);
+            if (newCategoryCity != null)
             {
-                existedCategoryCity.Name = name;
-                existedCategoryCity.ShortName = shortname;
-                existedCategoryCity.Status = status;
-                this.dataContext.CategoryCities.Update(existedCategoryCity);
-                this.dataContext.SaveChanges();
+                newCategoryCity.Status = (int)StatusEnum.DELETED;
+
+                this.dataContext.Entry(newCategoryCity).State = EntityState.Modified;
+                await this.dataContext.SaveChangesAsync();
             }
+            return newCategoryCity;
         }
 
-        public List<CategoryCity> GetAll()
+        public async Task<CategoryCity> EditCategoryCity(int id, CategoryCityDto categoryCityDto)
         {
-            return this.dataContext.CategoryCities.ToList();
+            CategoryCity newCategoryCity = await this.GetById(id);
+            if (newCategoryCity != null)
+            {
+                newCategoryCity.Name = categoryCityDto.Name;
+                newCategoryCity.ShortName = categoryCityDto.ShortName;;
+                
+                this.dataContext.Update(newCategoryCity);
+                await this.dataContext.SaveChangesAsync();
+            }
+            return newCategoryCity;
         }
 
-        public CategoryCity GetById(int id)
+        public async Task<List<CategoryCity>> GetAll()
         {
-            return this.dataContext.CategoryCities.Find(id);
+            return await dataContext.CategoryCities.ToListAsync();
         }
 
-        public List<CategoryCity> GetById(string name, string shortname, int status)
+        public async Task<CategoryCity> GetById(int id)
         {
-            return this.dataContext.CategoryCities.Where(record => record.Status == status && record.Name.Contains(name) 
-            && record.ShortName.Contains(shortname)).ToList();
+            return dataContext.CategoryCities.FirstOrDefault(c => c.Id == id);
         }
     }
 }
