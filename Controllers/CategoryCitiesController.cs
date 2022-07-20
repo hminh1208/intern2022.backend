@@ -6,7 +6,7 @@ namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class CategoryCitiesController : BaseController
     {
         private readonly ICategoryCityService categoryCityService;
