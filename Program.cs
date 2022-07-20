@@ -68,6 +68,7 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<IEmailService, EmailService>();
     services.AddScoped<ICityService, CityService>();
     services.AddScoped<ICategoryCityService, CategoryCityService>();
+    services.AddScoped<IGenderServices, GenderServices>();
     services.AddScoped<IEventService, EventService>();
 }
 
