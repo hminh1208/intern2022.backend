@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Helpers;
 
@@ -11,9 +12,10 @@ using WebApi.Helpers;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220714091108_CategoryCityTable")]
+    partial class CategoryCityTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,26 +88,6 @@ namespace WebApi.Migrations
 
                     b.ToTable("Accounts");
                 });
-            modelBuilder.Entity("WebApi.Entities.Gendermanagement", b =>
-            {
-                b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                b.Property<string>("Name")
-                    .HasColumnType("nvarchar(max)");
-
-                b.Property<string>("Status")
-                    .HasColumnType("int");
-
-                b.HasKey("Id");
-
-                b.ToTable("Gendermanagement");
-            }
-            );
-
 
             modelBuilder.Entity("WebApi.Entities.CategoryCity", b =>
                 {
@@ -128,7 +110,7 @@ namespace WebApi.Migrations
 
                     b.ToTable("CategoryCities");
                 });
-                
+
             modelBuilder.Entity("WebApi.Entities.City", b =>
                 {
                     b.Property<int>("Id")
@@ -178,55 +160,6 @@ namespace WebApi.Migrations
                             AbbName = "",
                             Name = "Lạng Sơn"
                         });
-                });
-
-            modelBuilder.Entity("WebApi.Entities.Event", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-
-                    b.Property<Guid?>("CreatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("StartedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-
-                    b.Property<Guid?>("UpdatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAccountId");
-
-                    b.HasIndex("UpdatedAccountId");
-
-                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("WebApi.Entities.Role", b =>
@@ -308,26 +241,6 @@ namespace WebApi.Migrations
                         });
 
                     b.Navigation("RefreshTokens");
-                });
-
-            modelBuilder.Entity("WebApi.Entities.Event", b =>
-                {
-                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                        .WithMany()
-
-                        .HasForeignKey("CreatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                        .WithMany()
-                        .HasForeignKey("UpdatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedAccount");
-
-                    b.Navigation("UpdatedAccount");
                 });
 #pragma warning restore 612, 618
         }
