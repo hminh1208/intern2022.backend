@@ -4,6 +4,8 @@ global using WebApi.Entities;
 global using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
 using WebApi.Authorization;
+using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,13 +15,46 @@ var builder = WebApplication.CreateBuilder(args);
     var env = builder.Environment;
  
     services.AddCors();
-    services.AddControllers().AddJsonOptions(x => 
+    services.AddControllers().AddNewtonsoftJson(options =>
     {
-        // serialize enums as strings in api responses (e.g. Role)
-        x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
     });
+    //    .AddJsonOptions(x =>
+    //{
+    //    // serialize enums as strings in api responses (e.g. Role)
+    //    x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    //    x.JsonSerializerOptions.IgnoreNullValues = true;
+    //});
+
     services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-    services.AddSwaggerGen();
+    services.AddSwaggerGen(option =>
+    {
+        option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
+        option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            In = ParameterLocation.Header,
+            Description = "Please enter a valid token",
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+        option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+    }
+        );
 
     services.AddDbContext<DataContext>(
         x => x.UseSqlServer(builder.Configuration.GetConnectionString("WebApiDatabase")));
@@ -32,10 +67,8 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<IAccountService, AccountService>();
     services.AddScoped<IEmailService, EmailService>();
     services.AddScoped<ICityService, CityService>();
-
-    //services.AddScoped<IEventService, EventService>();
     services.AddScoped<IGenderServices, GenderServices>();
-
+    services.AddScoped<IEventService, EventService>();
 }
 
 var app = builder.Build();
