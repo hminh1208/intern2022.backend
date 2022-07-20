@@ -9,6 +9,10 @@ public class DataContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<City> Cities { get; set; }
 
+   // public DbSet<Event> Events { get; set; }
+    public DbSet<Gendermanagement> Gendermanagemet { get; set; }
+
+
     private readonly IConfiguration Configuration;
 
     public DataContext(IConfiguration configuration)
