@@ -6,6 +6,8 @@ using System.Text.Json.Serialization;
 using WebApi.Authorization;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using AutoMapper;
+using WebApi.Models.Cities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +72,8 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<ICategoryCityService, CategoryCityService>();
     services.AddScoped<IGenderServices, GenderServices>();
     services.AddScoped<IEventService, EventService>();
+
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }
 
 var app = builder.Build();

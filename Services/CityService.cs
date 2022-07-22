@@ -1,64 +1,81 @@
-﻿using WebApi.Models.Cities;
+﻿using AutoMapper;
+using WebApi.Enums;
+using WebApi.Models.Cities;
 
 namespace WebApi.Services
 {
     public interface ICityService
     {
-        Task<List<City>> getAll();
-        Task<City> getById(int id);
-        Task<City> addAsync(CityDto cityDto);
-        Task<City> updateAsync(int id, CityDto cityDto);
-        Task<City> deleteAsync(int id);
+        Task<List<CityResponseDto>> getAll(StatusEnum statusEnum, string? keyWord, int page, int pageSize);
+        Task<CityResponseDto> getById(int id);
+        Task<CityResponseDto> addAsync(CityRequestDto cityDto, Account account);
+        Task<CityResponseDto> updateAsync(int id, CityRequestDto cityDto, Account account);
+        Task<CityResponseDto> deleteAsync(int id, Account account);
     }
+
     public class CityService : ICityService
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public CityService(DataContext dataContext)
+        public CityService(DataContext dataContext, IMapper mapper)
         {
             _context = dataContext;
+            _mapper = mapper;
         }
 
-        public async Task<City> addAsync(CityDto cityDto)
+        public async Task<CityResponseDto> addAsync(CityRequestDto cityDto, Account account)
         {
-            City newCity = new City(cityDto.Name, cityDto.AbbName);
+            City newCity = new City(cityDto.Name, cityDto.AbbName, account);
             this._context.Add(newCity);
             await this._context.SaveChangesAsync();
-            return newCity;
+            return _mapper.Map<City, CityResponseDto>(newCity);
         }
 
-        public async Task<City> deleteAsync(int id)
+        public async Task<CityResponseDto> deleteAsync(int id, Account account)
         {
-            City existCity = await this.getById(id);
+            City existCity = await _context.Cities.Where(c => c.Id == id).FirstOrDefaultAsync();
             if (existCity != null)
             {
-                this._context.Remove(existCity);
+                existCity.Status = StatusEnum.DELETED;
+                existCity.UpdatedDate = DateTime.Now;
+                existCity.UpdatedAccount = account;
                 await this._context.SaveChangesAsync();
             }
-            return existCity;
+            return _mapper.Map<City, CityResponseDto>(existCity);
         }
 
-        public async Task<List<City>> getAll()
+        public async Task<List<CityResponseDto>> getAll(StatusEnum statusEnum, string? keyWord, int page, int pageSize)
         {
-            return await _context.Cities.ToListAsync();
+            var listCities = await _context.Cities.Where(city => city.Status == statusEnum)
+                .Where(city => city.Name.Contains(keyWord ?? ""))
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .OrderBy(city => city.Name)
+                .ToListAsync();
+
+            return _mapper.Map<List<City>, List<CityResponseDto>>(listCities);
         }
 
-        public async Task<City> getById(int id)
+        public async Task<CityResponseDto> getById(int id)
         {
-            return await _context.Cities.Where(c => c.Id == id).FirstOrDefaultAsync();
+            var existCity = await _context.Cities.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<City, CityResponseDto>(existCity);
         }
 
-        public async Task<City> updateAsync(int id, CityDto cityDto)
+        public async Task<CityResponseDto> updateAsync(int id, CityRequestDto cityDto, Account account)
         {
-            City existCity = await this.getById(id);
-            if(existCity != null)
+            City existCity = await _context.Cities.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (existCity != null)
             {
                 existCity.Name = cityDto.Name;
                 existCity.AbbName = cityDto.AbbName;
+                existCity.UpdatedDate = DateTime.Now;
+                existCity.UpdatedAccount = account;
                 this._context.Update(existCity);
                 await this._context.SaveChangesAsync();
             }
-            return existCity;
+            return _mapper.Map<City, CityResponseDto>(existCity);
         }
     }
 }
