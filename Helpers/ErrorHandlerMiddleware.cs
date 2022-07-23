@@ -13,7 +13,7 @@ public class ErrorHandlerMiddleware
         _next = next;
         _logger = logger;
     }
-
+    
     public async Task Invoke(HttpContext context)
     {
         try

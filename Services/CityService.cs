@@ -6,7 +6,8 @@ namespace WebApi.Services
 {
     public interface ICityService
     {
-        Task<List<CityResponseDto>> getAll(StatusEnum statusEnum, string? keyWord, int page, int pageSize);
+        Task<List<CityResponseDto>> getAll(StatusEnum statusEnum, string keyWord, int page, int pageSize);
+        Task<int> countAll(StatusEnum statusEnum, string keyWord, int page, int pageSize);
         Task<CityResponseDto> getById(int id);
         Task<CityResponseDto> addAsync(CityRequestDto cityDto, Account account);
         Task<CityResponseDto> updateAsync(int id, CityRequestDto cityDto, Account account);
@@ -45,16 +46,27 @@ namespace WebApi.Services
             return _mapper.Map<City, CityResponseDto>(existCity);
         }
 
-        public async Task<List<CityResponseDto>> getAll(StatusEnum statusEnum, string? keyWord, int page, int pageSize)
+        public async Task<List<CityResponseDto>> getAll(StatusEnum statusEnum, string keyWord, int page, int pageSize)
         {
             var listCities = await _context.Cities.Where(city => city.Status == statusEnum)
                 .Where(city => city.Name.Contains(keyWord ?? ""))
-                .Skip((page - 1) * pageSize)
+                .Skip(page * pageSize)
                 .Take(pageSize)
                 .OrderBy(city => city.Name)
                 .ToListAsync();
 
             return _mapper.Map<List<City>, List<CityResponseDto>>(listCities);
+        }
+
+        public async Task<int> countAll(StatusEnum statusEnum, string keyWord, int page, int pageSize)
+        {
+            var totalCities = await _context.Cities.Where(city => city.Status == statusEnum)
+                .Where(city => city.Name.Contains(keyWord ?? ""))
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .CountAsync();
+
+            return totalCities;
         }
 
         public async Task<CityResponseDto> getById(int id)

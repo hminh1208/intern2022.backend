@@ -20,14 +20,20 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<City>>> GetApprovedAsync(string? keyword, int page = 1, int pageSize = 10)
+        public async Task<ActionResult<object>> GetApprovedAsync(string keyword, int page = 0, int pageSize = 10)
         {
             var cities = await _cityService.getAll(StatusEnum.APPROVED, keyword, page, pageSize);
-            return Ok(cities);
+            var total = await _cityService.countAll(StatusEnum.APPROVED, keyword, page, pageSize);
+            return Ok(new
+                {
+                    Results = cities,
+                    Total = total,
+            }
+            );
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<City>> GetAsync(int id)
+        public async Task<ActionResult<CityResponseDto>> GetAsync(int id)
         {
             var cities = await _cityService.getById(id);
             return Ok(cities);
