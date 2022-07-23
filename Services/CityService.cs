@@ -7,7 +7,7 @@ namespace WebApi.Services
     public interface ICityService
     {
         Task<List<CityResponseDto>> getAll(StatusEnum statusEnum, string keyWord, int page, int pageSize);
-        Task<int> countAll(StatusEnum statusEnum, string keyWord, int page, int pageSize);
+        Task<int> countAll(StatusEnum statusEnum, string keyWord);
         Task<CityResponseDto> getById(int id);
         Task<CityResponseDto> addAsync(CityRequestDto cityDto, Account account);
         Task<CityResponseDto> updateAsync(int id, CityRequestDto cityDto, Account account);
@@ -58,12 +58,10 @@ namespace WebApi.Services
             return _mapper.Map<List<City>, List<CityResponseDto>>(listCities);
         }
 
-        public async Task<int> countAll(StatusEnum statusEnum, string keyWord, int page, int pageSize)
+        public async Task<int> countAll(StatusEnum statusEnum, string keyWord)
         {
             var totalCities = await _context.Cities.Where(city => city.Status == statusEnum)
                 .Where(city => city.Name.Contains(keyWord ?? ""))
-                .Skip(page * pageSize)
-                .Take(pageSize)
                 .CountAsync();
 
             return totalCities;

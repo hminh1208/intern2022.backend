@@ -23,7 +23,7 @@ namespace WebApi.Controllers
         public async Task<ActionResult<object>> GetApprovedAsync(string keyword, int page = 0, int pageSize = 10)
         {
             var cities = await _cityService.getAll(StatusEnum.APPROVED, keyword, page, pageSize);
-            var total = await _cityService.countAll(StatusEnum.APPROVED, keyword, page, pageSize);
+            var total = await _cityService.countAll(StatusEnum.APPROVED, keyword);
             return Ok(new
                 {
                     Results = cities,
