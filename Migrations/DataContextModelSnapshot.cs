@@ -86,27 +86,7 @@ namespace WebApi.Migrations
 
                     b.ToTable("Accounts");
                 });
-            modelBuilder.Entity("WebApi.Entities.Gendermanagement", b =>
-            {
-                b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                b.Property<string>("Name")
-                    .HasColumnType("nvarchar(max)");
-
-<<<<<<< HEAD
-                b.Property<string>("Status")
-                    .HasColumnType("int");
-
-                b.HasKey("Id");
-
-                b.ToTable("Gendermanagement");
-            }
-            );
-=======
             modelBuilder.Entity("WebApi.Entities.CategoryCity", b =>
                 {
                     b.Property<int>("Id")
@@ -133,7 +113,6 @@ namespace WebApi.Migrations
                     b.ToTable("CategoryCities");
                 });
 
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
             modelBuilder.Entity("WebApi.Entities.City", b =>
                 {
                     b.Property<int>("Id")
@@ -182,12 +161,7 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-<<<<<<< HEAD
-
-                    b.Property<Guid?>("CreatedAccountId")
-=======
                     b.Property<Guid>("CreatedAccountId")
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
@@ -211,12 +185,7 @@ namespace WebApi.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-<<<<<<< HEAD
-
-                    b.Property<Guid?>("UpdatedAccountId")
-=======
                     b.Property<Guid>("UpdatedAccountId")
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -239,14 +208,30 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<Guid>("CreatedAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UpdatedAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAccountId");
+
+                    b.HasIndex("UpdatedAccountId");
 
                     b.ToTable("Gendermanagemet");
                 });
@@ -355,10 +340,25 @@ namespace WebApi.Migrations
                 {
                     b.HasOne("WebApi.Entities.Account", "CreatedAccount")
                         .WithMany()
-<<<<<<< HEAD
+                        .HasForeignKey("CreatedAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-=======
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
+                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
+                        .WithMany()
+                        .HasForeignKey("UpdatedAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedAccount");
+
+                    b.Navigation("UpdatedAccount");
+                });
+
+            modelBuilder.Entity("WebApi.Entities.Gendermanagement", b =>
+                {
+                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
+                        .WithMany()
                         .HasForeignKey("CreatedAccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

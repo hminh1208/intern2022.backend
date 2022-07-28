@@ -13,7 +13,6 @@ public class DataContext : DbContext
     public DbSet<Gendermanagement> Gendermanagemet { get; set; }
 
    // public DbSet<Event> Events { get; set; }
-    public DbSet<Gendermanagement> Gendermanagemet { get; set; }
 
 
     private readonly IConfiguration Configuration;
