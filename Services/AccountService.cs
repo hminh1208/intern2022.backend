@@ -83,7 +83,7 @@ public class AccountService : IAccountService
     public AuthenticateResponse RefreshToken(string token, string ipAddress)
     {
         var account = getAccountByRefreshToken(token);
-        var roles = _context.Accounts.Where(x => x.Id == account.Id).Include("Role").Select(x => x.Roles).ToList();
+        var roles = _context.Accounts.Where(x => x.Id == account.Id).Include(x => x.Roles).Select(x => x.Roles).ToList();
         var refreshToken = account.RefreshTokens.Single(x => x.Token == token);
 
         if (refreshToken.IsRevoked)
@@ -289,7 +289,7 @@ public class AccountService : IAccountService
 
     private Account getAccountByRefreshToken(string token)
     {
-        var account = _context.Accounts.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+        var account = _context.Accounts.Include(x => x.Roles).SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
         if (account == null) throw new AppException("Invalid token");
         return account;
     }

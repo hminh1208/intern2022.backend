@@ -4,7 +4,7 @@ namespace WebApi.Entities
 {
     public class BaseEntity
     {
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }    
         public DateTime UpdatedDate { get; set; }
         [JsonIgnore]
         public Account CreatedAccount { get; set; }
