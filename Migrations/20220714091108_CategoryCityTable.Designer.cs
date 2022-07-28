@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Helpers;
 
@@ -11,9 +12,10 @@ using WebApi.Helpers;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220714091108_CategoryCityTable")]
+    partial class CategoryCityTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,27 +88,7 @@ namespace WebApi.Migrations
 
                     b.ToTable("Accounts");
                 });
-            modelBuilder.Entity("WebApi.Entities.Gendermanagement", b =>
-            {
-                b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                b.Property<string>("Name")
-                    .HasColumnType("nvarchar(max)");
-
-<<<<<<< HEAD
-                b.Property<string>("Status")
-                    .HasColumnType("int");
-
-                b.HasKey("Id");
-
-                b.ToTable("Gendermanagement");
-            }
-            );
-=======
             modelBuilder.Entity("WebApi.Entities.CategoryCity", b =>
                 {
                     b.Property<int>("Id")
@@ -116,14 +98,10 @@ namespace WebApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ShortName")
-                        .IsRequired()
-                        .HasMaxLength(5)
-                        .HasColumnType("nvarchar(5)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -133,7 +111,6 @@ namespace WebApi.Migrations
                     b.ToTable("CategoryCities");
                 });
 
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
             modelBuilder.Entity("WebApi.Entities.City", b =>
                 {
                     b.Property<int>("Id")
@@ -143,112 +120,46 @@ namespace WebApi.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("AbbName")
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<Guid>("CreatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UpdatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAccountId");
-
-                    b.HasIndex("UpdatedAccountId");
-
-                    b.ToTable("Cities");
-                });
-
-            modelBuilder.Entity("WebApi.Entities.Event", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-<<<<<<< HEAD
-
-                    b.Property<Guid?>("CreatedAccountId")
-=======
-                    b.Property<Guid>("CreatedAccountId")
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<DateTime>("StartedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-<<<<<<< HEAD
-
-                    b.Property<Guid?>("UpdatedAccountId")
-=======
-                    b.Property<Guid>("UpdatedAccountId")
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAccountId");
-
-                    b.HasIndex("UpdatedAccountId");
-
-                    b.ToTable("Events");
-                });
-
-            modelBuilder.Entity("WebApi.Entities.Gendermanagement", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Gendermanagemet");
+                    b.ToTable("Cities");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            AbbName = "",
+                            Name = "Hà Nội"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            AbbName = "",
+                            Name = "Hồ Chi Minh"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            AbbName = "",
+                            Name = "Đà Nẵng"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            AbbName = "",
+                            Name = "Quảng Nam"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            AbbName = "",
+                            Name = "Lạng Sơn"
+                        });
                 });
 
             modelBuilder.Entity("WebApi.Entities.Role", b =>
@@ -330,48 +241,6 @@ namespace WebApi.Migrations
                         });
 
                     b.Navigation("RefreshTokens");
-                });
-
-            modelBuilder.Entity("WebApi.Entities.City", b =>
-                {
-                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                        .WithMany()
-                        .HasForeignKey("CreatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                        .WithMany()
-                        .HasForeignKey("UpdatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedAccount");
-
-                    b.Navigation("UpdatedAccount");
-                });
-
-            modelBuilder.Entity("WebApi.Entities.Event", b =>
-                {
-                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                        .WithMany()
-<<<<<<< HEAD
-
-=======
->>>>>>> ada5f2d26b9605ca5e1320e341c95585187182b5
-                        .HasForeignKey("CreatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                        .WithMany()
-                        .HasForeignKey("UpdatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedAccount");
-
-                    b.Navigation("UpdatedAccount");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,7 +2,7 @@
 
 namespace WebApi.Models.Cities
 {
-    public class CityDto
+    public class CityRequestDto
     {
         [Required]
         public string Name { get; set; }
