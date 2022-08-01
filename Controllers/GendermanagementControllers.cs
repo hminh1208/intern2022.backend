@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Gendermanagements;
 using WebApi.Enums;
+using WebApi.Authorization;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -41,6 +42,7 @@ namespace WebApi.Controllers
             var gendermanagemment = await _services.GetByID(id);
             return Ok(gendermanagemment);
         }
+        [Authorize]
         [HttpPost("add")]
         public async Task<ActionResult<GenderResponseDto>> addAsync([FromBody] GenderRequestDto genderRequestDto)
         {
@@ -51,6 +53,7 @@ namespace WebApi.Controllers
             }
             return Ok(result);
         }
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<ActionResult<GenderResponseDto>> updateAsync(int id, [FromBody] GenderRequestDto genderRequestDto)
         {
@@ -61,6 +64,7 @@ namespace WebApi.Controllers
             }
             return Ok(result);
         }
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<ActionResult<GenderResponseDto>> deleteAsync(int id)
         {
