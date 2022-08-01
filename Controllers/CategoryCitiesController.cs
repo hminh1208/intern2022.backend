@@ -23,6 +23,7 @@ namespace WebApi.Controllers
             return Ok(newcategorycity);
         }
 
+
         [HttpGet("Get-active")]
         public async Task<ActionResult<List<CategoryCity>>> GetCategoryCityActive()
         {
@@ -53,6 +54,7 @@ namespace WebApi.Controllers
             }    
             return Ok(result);
         }
+
 
         [HttpPost("Edit/{id}")]
         public async Task<ActionResult<CategoryCity>> EditCategoryCity(int id,[FromBody] CategoryCityDto categoryCityDto)

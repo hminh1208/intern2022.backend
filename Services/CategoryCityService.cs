@@ -10,9 +10,7 @@ namespace WebApi.Services
         Task<CategoryCity> AddCategoryCity(CategoryCityDto categoryCityDto);
         Task<CategoryCity> EditCategoryCity(int id, CategoryCityDto categoryCityDto);
         Task<CategoryCity> DeleteCategoryCity(int id);
-
         Task<List<CategoryCity>> GetCategoryCityActive();
-
         Task<List<CategoryCity>> GetCategoryCityDeleted();
     }
     public class CategoryCityService : ICategoryCityService
@@ -50,8 +48,6 @@ namespace WebApi.Services
             if (newCategoryCity != null)
             {
                 newCategoryCity.Status = (int)StatusEnum.DELETED;
-
-
                 this.dataContext.Entry(newCategoryCity).State = EntityState.Modified;
                 await this.dataContext.SaveChangesAsync();
             }
@@ -61,6 +57,7 @@ namespace WebApi.Services
         public async Task<CategoryCity> EditCategoryCity(int id, CategoryCityDto categoryCityDto)
         {
             CategoryCity newCategoryCity = await this.GetById(id);
+
             if (newCategoryCity != null && newCategoryCity.Status == 0)
             {
                 newCategoryCity.Name = categoryCityDto.Name;
