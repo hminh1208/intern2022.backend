@@ -35,7 +35,7 @@ namespace WebApi.Controllers
             );
         }
 
-        [HttpGet("get-ById/{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<GenderResponseDto>> getAsync(int id)
         {
             var gendermanagemment = await _services.GetByID(id);
@@ -51,7 +51,7 @@ namespace WebApi.Controllers
             }
             return Ok(result);
         }
-        [HttpPut("edit/{id}")]
+        [HttpPut("{id}")]
         public async Task<ActionResult<GenderResponseDto>> updateAsync(int id, [FromBody] GenderRequestDto genderRequestDto)
         {
             GenderResponseDto result = null;
@@ -61,7 +61,7 @@ namespace WebApi.Controllers
             }
             return Ok(result);
         }
-        [HttpDelete("delete")]
+        [HttpDelete("{id}")]
         public async Task<ActionResult<GenderResponseDto>> deleteAsync(int id)
         {
             GenderResponseDto result = await _services.DeleteGendermanagement(id, Account);

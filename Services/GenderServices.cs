@@ -95,13 +95,22 @@ namespace WebApi.Services
             Gendermanagement existGendermanagement = await _dataContext.Gendermanagemet.Where(c => c.Id == id).FirstOrDefaultAsync();
             if (existGendermanagement != null)
             {
-                existGendermanagement.Name = genderRequestDto.Name;
-                existGendermanagement.UpdatedDate = DateTime.Now;
-                existGendermanagement.UpdatedAccount = account;
-                this._dataContext.Update(existGendermanagement);
-                await this._dataContext.SaveChangesAsync();
+                if (_dataContext.Gendermanagemet.Any(x => x.Name == genderRequestDto.Name))
+                {
+                    existGendermanagement = null;
+
+                }
+                else
+                {
+
+                    existGendermanagement.Name = genderRequestDto.Name;
+                    existGendermanagement.UpdatedDate = DateTime.Now;
+                    existGendermanagement.UpdatedAccount = account;
+                    this._dataContext.Update(existGendermanagement);
+                    await this._dataContext.SaveChangesAsync();
+                }
             }
             return _mapper.Map<Gendermanagement, GenderResponseDto>(existGendermanagement);
         }
     }
-}
+} 
