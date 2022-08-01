@@ -6,8 +6,8 @@ namespace WebApi.Services
     public interface IGenderServices
     {
 
-        Task<List<GenderResponseDto>> GetAll(StatusEnum statusEnum, int page, int pageSize);
-        Task<List<GenderResponseDto>> GetSearch(StatusEnum statusEnum, string keyWord, int page, int pageSize);
+        
+        Task<List<GenderResponseDto>> Get(StatusEnum statusEnum, string keyWord, int page, int pageSize);
         Task<int> countAll(StatusEnum statusEnum, string keyWord);
         Task<GenderResponseDto> GetByID(int id);
         Task<GenderResponseDto> AddGendermanagement(GenderRequestDto genderRequestDto, Account account);
@@ -56,16 +56,8 @@ namespace WebApi.Services
 
         }
 
-        public async Task<List<GenderResponseDto>> GetAll(StatusEnum statusEnum, int page, int pageSize)
-        {
-            var listGendermanagements = await _dataContext.Gendermanagemet.Where(gendermanagement => gendermanagement.Status == statusEnum)
-                .Skip(page * pageSize)
-                .Take(pageSize)
-                .OrderBy(gendermanagement => gendermanagement.Name)
-                .ToListAsync();
-            return _mapper.Map<List<Gendermanagement>, List<GenderResponseDto>>(listGendermanagements);
-        }
-        public async Task<List<GenderResponseDto>> GetSearch(StatusEnum statusEnum, string keyWord, int page, int pageSize)
+        
+        public async Task<List<GenderResponseDto>> Get(StatusEnum statusEnum, string keyWord, int page, int pageSize)
         {
             var listGendermanagements = await _dataContext.Gendermanagemet.Where(gendermanagement => gendermanagement.Status == statusEnum)
                  .Where(gendermanagement => gendermanagement.Name.Contains(keyWord ?? ""))

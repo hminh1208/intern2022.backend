@@ -13,20 +13,11 @@ namespace WebApi.Controllers
         {
             this._services = services;
         }
-        [HttpGet("get-all")]
-        public async Task<ActionResult<List<GenderResponseDto>>> getAsync(int page = 0, int pageSize = 10)
+        
+        [HttpGet("get")]
+        public async Task<ActionResult<List<object>>> GetAsync(string keyword, int page = 0, int pageSize = 10)
         {
-            var gendemanagement = await _services.GetAll(StatusEnum.APPROVED, page, pageSize);
-            return Ok(new
-            {
-                Results = gendemanagement
-            }
-            );
-        }
-        [HttpGet("search")]
-        public async Task<ActionResult<List<object>>> searchAsync(string keyword, int page = 0, int pageSize = 10)
-        {
-            var gendemanagement = await _services.GetSearch(StatusEnum.APPROVED, keyword, page, pageSize);
+            var gendemanagement = await _services.Get(StatusEnum.APPROVED, keyword, page, pageSize);
             var total = await _services.countAll(StatusEnum.APPROVED, keyword);
             return Ok(new
             {
