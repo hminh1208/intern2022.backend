@@ -2,7 +2,7 @@
 
 namespace WebApi.Models.CategoryCities
 {
-    public class CategoryCityDto
+    public class CategoryCityRequestDto
     {
         [Required]
         [MaxLength(500)]
