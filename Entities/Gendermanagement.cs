@@ -1,14 +1,31 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApi.Enums;
 namespace WebApi.Entities
 {
-    public class Gendermanagement
+    public class Gendermanagement : BaseEntity
     {
+        public Gendermanagement()
+        {
+
+        }
+
+        public Gendermanagement(string newName, Account account)
+        {
+            this.Name = newName;
+            this.CreatedAccount = account;
+            this.UpdatedAccount = account;
+            this.CreatedDate = DateTime.Now;
+            this.UpdatedDate = DateTime.Now;
+            this.Status = StatusEnum.APPROVED;
+        }
+
+
         [Key]
-        [Required]
         public int Id { get; set; }
-        [Required]
+        [MaxLength(50)]
         public string Name { get; set; }
-        [Required]
-        public int Status { get; set; }
+
+        public StatusEnum Status { get; set; }
     }
 }
+

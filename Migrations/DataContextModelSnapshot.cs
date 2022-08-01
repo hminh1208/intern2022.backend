@@ -208,14 +208,30 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<Guid>("CreatedAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("UpdatedAccountId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedAccountId");
+
+                    b.HasIndex("UpdatedAccountId");
 
                     b.ToTable("Gendermanagemet");
                 });
@@ -321,6 +337,25 @@ namespace WebApi.Migrations
                 });
 
             modelBuilder.Entity("WebApi.Entities.Event", b =>
+                {
+                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
+                        .WithMany()
+                        .HasForeignKey("CreatedAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
+                        .WithMany()
+                        .HasForeignKey("UpdatedAccountId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedAccount");
+
+                    b.Navigation("UpdatedAccount");
+                });
+
+            modelBuilder.Entity("WebApi.Entities.Gendermanagement", b =>
                 {
                     b.HasOne("WebApi.Entities.Account", "CreatedAccount")
                         .WithMany()

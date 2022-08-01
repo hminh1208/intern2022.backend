@@ -1,42 +1,71 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Models.Gendermanagements;
+using WebApi.Enums;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GendermanagementControllers: BaseController
+    public class GendermanagementControllers : BaseController
     {
         private readonly IGenderServices _services;
         public GendermanagementControllers(IGenderServices services)
         {
             this._services = services;
         }
-        [HttpGet("get-all-gender")]
-        public ActionResult<List<Gendermanagement>> GetAll() => _services.GetAll();
-        [HttpGet("get-gender-ById/{id}")]
-        public ActionResult<Gendermanagement> GetByID(int id) => this._services.GetByID(id);
-        [HttpPost("add-gender")]
-        public async void AddGenmanagemennt(string name,int status)
+        [HttpGet("get-all")]
+        public async Task<ActionResult<List<GenderResponseDto>>> getAsync(int page = 0, int pageSize = 10)
         {
-            if(name != null && status != null)
+            var gendemanagement = await _services.GetAll(StatusEnum.APPROVED, page, pageSize);
+            return Ok(new
             {
-               
-                _services.AddGendermanagement(name ,status);
+                Results = gendemanagement
             }
+            );
         }
-        [HttpPut("edit-gender-ById/{id}")]
-        public async void UpdateGendermanagement(int id,string name,int status)
+        [HttpGet("search")]
+        public async Task<ActionResult<List<object>>> searchAsync(string keyword, int page = 0, int pageSize = 10)
         {
-            if(name != null && status != null)
+            var gendemanagement = await _services.GetSearch(StatusEnum.APPROVED, keyword, page, pageSize);
+            var total = await _services.countAll(StatusEnum.APPROVED, keyword);
+            return Ok(new
             {
-                
-                _services.UpdateGendermanagement(id,name,status);
+                Results = gendemanagement,
+                Total = total
             }
+            );
         }
-        [HttpDelete("delete-gender")]
-        public async void DeleteGendermanagement(int id)
+
+        [HttpGet("get-ById/{id}")]
+        public async Task<ActionResult<GenderResponseDto>> getAsync(int id)
         {
-            _services.DeleteGendermanagement(id);
+            var gendermanagemment = await _services.GetByID(id);
+            return Ok(gendermanagemment);
+        }
+        [HttpPost("add")]
+        public async Task<ActionResult<GenderResponseDto>> addAsync([FromBody] GenderRequestDto genderRequestDto)
+        {
+            GenderResponseDto result = null;
+            if (ModelState.IsValid)
+            {
+                result = await _services.AddGendermanagement(genderRequestDto, Account);
+            }
+            return Ok(result);
+        }
+        [HttpPut("edit/{id}")]
+        public async Task<ActionResult<GenderResponseDto>> updateAsync(int id, [FromBody] GenderRequestDto genderRequestDto)
+        {
+            GenderResponseDto result = null;
+            if (ModelState.IsValid)
+            {
+                result = await _services.UpdateGendermanagement(id, genderRequestDto, Account);
+            }
+            return Ok(result);
+        }
+        [HttpDelete("delete")]
+        public async Task<ActionResult<GenderResponseDto>> deleteAsync(int id)
+        {
+            GenderResponseDto result = await _services.DeleteGendermanagement(id, Account);
+            return Ok(result);
         }
     }
 }
