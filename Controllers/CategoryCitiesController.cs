@@ -15,6 +15,7 @@ namespace WebApi.Controllers
         {
             this.categoryCityService = categoryCityService;
         }
+        [HttpGet]
         public async Task<ActionResult<object>> GetApprovedAsync(string keyword, int page = 0, int pageSize = 10)
         {
             var cities = await categoryCityService.GetAll(StatusEnum.APPROVED, keyword, page, pageSize);
