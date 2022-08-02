@@ -1,69 +1,115 @@
-﻿
+﻿using WebApi.Models.Gendermanagements;
+using WebApi.Enums;
+using AutoMapper;
 namespace WebApi.Services
 {
     public interface IGenderServices
     {
-        List<Gendermanagement> GetAll();
-        Gendermanagement GetByID(int id);
-        public void  AddGendermanagement(string name,int status);
-        public void UpdateGendermanagement(int id,string name,int status);
-        public void DeleteGendermanagement(int id);
+
+
+        
+        Task<List<GenderResponseDto>> Get(StatusEnum statusEnum, string keyWord, int page, int pageSize);
+
+        Task<int> countAll(StatusEnum statusEnum, string keyWord);
+        Task<GenderResponseDto> GetByID(int id);
+        Task<GenderResponseDto> AddGendermanagement(GenderRequestDto genderRequestDto, Account account);
+        Task<GenderResponseDto> UpdateGendermanagement(int id, GenderRequestDto genderRequestDto, Account account);
+        Task<GenderResponseDto> DeleteGendermanagement(int id, Account account);
     }
     public class GenderServices : IGenderServices
     {
-        private DataContext _dataContext;
-        public GenderServices(DataContext dataContext)
+        private readonly DataContext _dataContext;
+        private readonly IMapper _mapper;
+        public GenderServices(DataContext dataContext, IMapper mapper)
         {
             _dataContext = dataContext;
+            _mapper = mapper;
         }
 
-        public void AddGendermanagement(string name, int status)
+        public async Task<GenderResponseDto> AddGendermanagement(GenderRequestDto genderRequestDto, Account account)
         {
-            Gendermanagement gendermanagemet = new Gendermanagement();
-            gendermanagemet.Name = name;
-            gendermanagemet.Status = status;
-            this._dataContext.Gendermanagemet.Add(gendermanagemet);
-            this._dataContext.SaveChanges();
-        }
-
-        public void DeleteGendermanagement(int id)
-        {
-            Gendermanagement gendermanagemet = this.GetByID(id);
-            if (gendermanagemet != null)
+            Gendermanagement newGendermanagement = new Gendermanagement(genderRequestDto.Name, account);
+            if (_dataContext.Gendermanagemet.Any(x => x.Name == genderRequestDto.Name))
             {
-                if(gendermanagemet.Status == 0)
-                {
-                    gendermanagemet.Status = 1;
-                }  
-                else if(gendermanagemet.Status == 1)
-                {
-                    gendermanagemet.Status = 0;
-                }    
-                this._dataContext.Gendermanagemet.Update(gendermanagemet);
-                this._dataContext.SaveChanges();
+                newGendermanagement = null;
+
             }
-        }
-
-        public List<Gendermanagement> GetAll()
-        {
-            return this._dataContext.Gendermanagemet.ToList();
-        }
-
-        public Gendermanagement GetByID(int id)
-        {
-            return this._dataContext.Gendermanagemet.Where(g => g.Id == id).FirstOrDefault();
-        }
-
-        public void UpdateGendermanagement(int id, string name, int status)
-        {
-            Gendermanagement gendermanagemet = GetByID(id);
-            if(gendermanagemet != null)
+            else
             {
-                gendermanagemet.Name = name;
-                gendermanagemet.Status=status;
-                this._dataContext.Gendermanagemet.Update(gendermanagemet);
-                this._dataContext.SaveChanges();
-            }    
+                this._dataContext.Add(newGendermanagement);
+                await this._dataContext.SaveChangesAsync();
+            }
+            return _mapper.Map<Gendermanagement, GenderResponseDto>(newGendermanagement);
+        }
+
+
+
+        public async Task<GenderResponseDto> DeleteGendermanagement(int id, Account account)
+        {
+            Gendermanagement existGendermanagement = await _dataContext.Gendermanagemet.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (existGendermanagement != null)
+            {
+                existGendermanagement.Status = StatusEnum.DELETED;
+                existGendermanagement.UpdatedDate = DateTime.Now;
+                existGendermanagement.UpdatedAccount = account;
+                await this._dataContext.SaveChangesAsync();
+            }
+            return _mapper.Map<Gendermanagement, GenderResponseDto>(existGendermanagement);
+
+        }
+
+
+        
+        public async Task<List<GenderResponseDto>> Get(StatusEnum statusEnum, string keyWord, int page, int pageSize)
+
+        
+        {
+            var listGendermanagements = await _dataContext.Gendermanagemet.Where(gendermanagement => gendermanagement.Status == statusEnum)
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .OrderBy(gendermanagement => gendermanagement.Name)
+                .ToListAsync();
+            return _mapper.Map<List<Gendermanagement>, List<GenderResponseDto>>(listGendermanagements);
+        }
+       
+        public async Task<int> countAll(StatusEnum statusEnum, string keyWord)
+        {
+            var totalGendermanagements = await _dataContext.Gendermanagemet.Where(gendermanagement => gendermanagement.Status == statusEnum)
+                .Where(gendermanagement => gendermanagement.Name.Contains(keyWord ?? ""))
+                .CountAsync();
+
+            return totalGendermanagements;
+        }
+
+        public async Task<GenderResponseDto> GetByID(int id)
+        {
+            var existGenmanagement = await _dataContext.Gendermanagemet.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return _mapper.Map<Gendermanagement, GenderResponseDto>(existGenmanagement);
+        }
+
+        public async Task<GenderResponseDto> UpdateGendermanagement(int id, GenderRequestDto genderRequestDto, Account account)
+        {
+            Gendermanagement existGendermanagement = await _dataContext.Gendermanagemet.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (existGendermanagement != null)
+            {
+
+                if (_dataContext.Gendermanagemet.Any(x => x.Name == genderRequestDto.Name))
+                {
+                    existGendermanagement = null;
+
+                }
+                else
+                {
+
+                    existGendermanagement.Name = genderRequestDto.Name;
+                    existGendermanagement.UpdatedDate = DateTime.Now;
+                    existGendermanagement.UpdatedAccount = account;
+                    this._dataContext.Update(existGendermanagement);
+                    await this._dataContext.SaveChangesAsync();
+                }
+
+            }
+            return _mapper.Map<Gendermanagement, GenderResponseDto>(existGendermanagement);
         }
     }
-}
+} 

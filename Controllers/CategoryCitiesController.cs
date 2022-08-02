@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Authorization;
 using WebApi.Enums;
-using WebApi.Models.CategoryCities;
 
 namespace WebApi.Controllers
 {
@@ -68,7 +67,6 @@ namespace WebApi.Controllers
             }    
             return Ok(result);
         }
-
         [Authorize]
         [HttpPost("Edit/{id}")]
         public async Task<ActionResult<CategoryCityResponseDto>> EditCategoryCity(int id,[FromBody] CategoryCityRequestDto categoryCityDto)

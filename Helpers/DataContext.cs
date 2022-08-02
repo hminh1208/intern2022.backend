@@ -12,6 +12,9 @@ public class DataContext : DbContext
     public DbSet<Event> Events { get; set; }
     public DbSet<Gendermanagement> Gendermanagemet { get; set; }
 
+   // public DbSet<Event> Events { get; set; }
+
+
     private readonly IConfiguration Configuration;
 
     public DataContext(IConfiguration configuration)

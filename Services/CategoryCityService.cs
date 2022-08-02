@@ -62,7 +62,6 @@ namespace WebApi.Services
                 existCity.Status = (int)StatusEnum.DELETED;
                 existCity.UpdatedDate = DateTime.Now;
                 existCity.UpdatedAccount = account;
-
                 await this.dataContext.SaveChangesAsync();
             }
             return mapper.Map<CategoryCity, CategoryCityResponseDto>(existCity);
@@ -123,6 +122,16 @@ namespace WebApi.Services
                 .ToListAsync();
 
             return mapper.Map<List<CategoryCity>, List<CategoryCityResponseDto>>(listCategoryCities);
+        }
+
+        public async Task<List<CategoryCity>> GetCategoryCityActive()
+        {
+            return dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DRAFT).ToList();
+        }
+
+        public async Task<List<CategoryCity>> GetCategoryCityDeleted()
+        {
+            return dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DELETED).ToList();
         }
     }
 }
