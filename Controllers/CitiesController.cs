@@ -8,7 +8,7 @@ using WebApi.Models.Cities;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     
     public class CitiesController : BaseController
     {
