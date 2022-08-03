@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Authorization;
 using WebApi.Enums;
+using WebApi.Models.CategoryCities;
 
 namespace WebApi.Controllers
 {
