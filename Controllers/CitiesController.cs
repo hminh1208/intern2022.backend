@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Authorization;
 using WebApi.Enums;
+using WebApi.Models.Category;
 using WebApi.Models.Cities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860

@@ -126,12 +126,12 @@ namespace WebApi.Services
 
         public async Task<List<CategoryCity>> GetCategoryCityActive()
         {
-            return dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DRAFT).ToList();
+            return await dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DRAFT).ToListAsync();
         }
 
         public async Task<List<CategoryCity>> GetCategoryCityDeleted()
         {
-            return dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DELETED).ToList();
+            return await dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DELETED).ToListAsync();
         }
     }
 }
