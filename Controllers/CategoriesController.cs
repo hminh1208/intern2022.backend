@@ -19,16 +19,11 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<object>> GetApprovedAsync(string keyword, int page = 0, int pageSize = 10)
+        public async Task<ActionResult<ApiResponseDto>> GetApprovedAsync(string keyword, int page = 0, int pageSize = 10)
         {
             var categories = await _categoryService.getAll(StatusEnum.APPROVED, keyword, page, pageSize);
             var total = await _categoryService.countAll(StatusEnum.APPROVED, keyword);
-            return Ok(new
-                {
-                    Results = categories,
-                    Total = total,
-                }
-            );
+            return new ApiResponseDto(categories, total);
         }
 
         [HttpGet("{id}")]
