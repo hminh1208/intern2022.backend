@@ -11,6 +11,7 @@ public class DataContext : DbContext
     public DbSet<CategoryCity> CategoryCities { get; set; }
     public DbSet<Event> Events { get; set; }
     public DbSet<Gendermanagement> Gendermanagemet { get; set; }
+    public DbSet<Language> Languages { get; set; }  
 
    // public DbSet<Event> Events { get; set; }
 

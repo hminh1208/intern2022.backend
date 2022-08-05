@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using WebApi.Models.Cities;
 using WebApi.Models.Gendermanagements;
+using WebApi.Models.Languages;
 
 namespace WebApi.Extensions
 {
@@ -10,6 +11,7 @@ namespace WebApi.Extensions
         {
             CreateMap<City, CityResponseDto>();
             CreateMap<Gendermanagement, GenderResponseDto>();
+            CreateMap<Language, LanguageResponseDto>();
         }
     }
 }
