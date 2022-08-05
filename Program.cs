@@ -73,6 +73,7 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddScoped<ICategoryCityService, CategoryCityService>();
     services.AddScoped<IGenderServices, GenderServices>();
     services.AddScoped<IEventService, EventService>();
+    services.AddScoped<ILanguageService,LanguageService>();
 
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 }
