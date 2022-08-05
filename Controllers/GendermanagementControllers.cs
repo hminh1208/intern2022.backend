@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Models.Gendermanagements;
 using WebApi.Enums;
+
 using WebApi.Authorization;
+
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
@@ -13,6 +15,7 @@ namespace WebApi.Controllers
         {
             this._services = services;
         }
+
         
         [HttpGet("get")]
         public async Task<ActionResult<List<object>>> GetAsync(string keyword, int page = 0, int pageSize = 10)
@@ -59,6 +62,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<GenderResponseDto>> deleteAsync(int id)
         {
+
             GenderResponseDto result = await _services.DeleteGendermanagement(id, Account);
             return Ok(result);
         }

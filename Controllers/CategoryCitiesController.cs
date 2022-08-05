@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebApi.Authorization;
 using WebApi.Models.CategoryCities;
 
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class CategoryCitiesController : BaseController
     {
         private readonly ICategoryCityService categoryCityService;
@@ -23,14 +23,28 @@ namespace WebApi.Controllers
             return Ok(newcategorycity);
         }
 
-        [HttpGet("Get-category-city-/{id}")]
+
+        [HttpGet("Get-active")]
+        public async Task<ActionResult<List<CategoryCity>>> GetCategoryCityActive()
+        {
+            var newcategorycity = await categoryCityService.GetCategoryCityActive();
+            return Ok(newcategorycity);
+        }
+
+        [HttpGet("Get-Deleted")]
+        public async Task<ActionResult<List<CategoryCity>>> GetCategoryCityDeleted()
+        {
+            return Ok(await categoryCityService.GetCategoryCityDeleted());
+        }
+
+        [HttpGet("Get/{id}")]
         public async Task<ActionResult<CategoryCity>> GetById(int id)
         {
             var newcategotycity = await categoryCityService.GetById(id);
             return Ok(newcategotycity);
         }
 
-        [HttpPost("Add-new-category-city")]
+        [HttpPost("Add-new")]
         public async Task<ActionResult<CategoryCity>> AddCategoryCity([FromBody] CategoryCityDto categoryCityDto)
         {
             CategoryCity result = null;
@@ -41,7 +55,8 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Edit-category-cty-/{id}")]
+
+        [HttpPost("Edit/{id}")]
         public async Task<ActionResult<CategoryCity>> EditCategoryCity(int id,[FromBody] CategoryCityDto categoryCityDto)
         {
             CategoryCity result = null;
@@ -52,11 +67,10 @@ namespace WebApi.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("Remove-category-city-/{id}")]
+        [HttpDelete("Remove/{id}")]
         public async Task<ActionResult<CategoryCity>> DeleteCategoryCity(int id)
         {
             CategoryCity result = await categoryCityService.DeleteCategoryCity(id);
-            //return Ok(new { message = "Account deleted successfully" });
             return Ok(result);
         }
     }
