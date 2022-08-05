@@ -1,92 +1,137 @@
-﻿using WebApi.Enums;
+﻿using AutoMapper;
+using WebApi.Enums;
 using WebApi.Models.CategoryCities;
 
 namespace WebApi.Services
 {
     public interface ICategoryCityService
     {
-        Task<List<CategoryCity>> GetAll();
-        Task<CategoryCity> GetById(int id);
-        Task<CategoryCity> AddCategoryCity(CategoryCityDto categoryCityDto);
-        Task<CategoryCity> EditCategoryCity(int id, CategoryCityDto categoryCityDto);
-        Task<CategoryCity> DeleteCategoryCity(int id);
-        Task<List<CategoryCity>> GetCategoryCityActive();
-        Task<List<CategoryCity>> GetCategoryCityDeleted();
+        Task<List<CategoryCityResponseDto>> GetAll(StatusEnum statusEnum, string keyword, int page, int pagesize);
+        Task<CategoryCityResponseDto> GetById(int id);
+        Task<CategoryCityResponseDto> AddCategoryCity(CategoryCityRequestDto categoryCityDto, Account account);
+        Task<CategoryCityResponseDto> EditCategoryCity(int id, CategoryCityRequestDto categoryCityDto, Account account);
+        Task<CategoryCityResponseDto> DeleteCategoryCity(int id, Account account);
+
+        Task<List<CategoryCityResponseDto>> GetCategoryCityActive(string keyword, int page, int pagesize);
+
+        Task<List<CategoryCityResponseDto>> GetCategoryCityDeleted(string keyword, int page, int pagesize);
+        Task<int> countAll(StatusEnum statusEnum, string keyWord);
     }
     public class CategoryCityService : ICategoryCityService
     {
         private readonly DataContext dataContext;
+        private readonly IMapper mapper;
 
-        public CategoryCityService(DataContext dataContext)
+        public CategoryCityService(DataContext dataContext, IMapper mapper)
         {
             this.dataContext = dataContext;
+            this.mapper = mapper;
         }
 
-        public async Task<CategoryCity> AddCategoryCity(CategoryCityDto categoryCityDto)
+        public async Task<CategoryCityResponseDto> AddCategoryCity(CategoryCityRequestDto categoryCityDto, Account account)
         {
-            CategoryCity newCategoryCity = new CategoryCity();
+            CategoryCityResponseDto newCategoryCity = new CategoryCityResponseDto();
             if (dataContext.CategoryCities.Any(x => x.Name == categoryCityDto.Name) || dataContext.CategoryCities.Any(x => x.ShortName == categoryCityDto.ShortName))
             {
                 return newCategoryCity = null;
-            }  
+            }
             else
             {
-                newCategoryCity.Name = categoryCityDto.Name;
-                newCategoryCity.ShortName = categoryCityDto.ShortName;
-                newCategoryCity.Status = (int)StatusEnum.DRAFT;
-
-                this.dataContext.Add(newCategoryCity);
+                CategoryCity newCity = new CategoryCity(categoryCityDto.Name, categoryCityDto.ShortName, account);
+                this.dataContext.Add(newCity);
                 await this.dataContext.SaveChangesAsync();
-                return newCategoryCity;
-            }    
-            return newCategoryCity;
-        }
-
-        public async Task<CategoryCity> DeleteCategoryCity(int id)
-        {
-            CategoryCity newCategoryCity = await this.GetById(id);
-            if (newCategoryCity != null)
-            {
-                newCategoryCity.Status = (int)StatusEnum.DELETED;
-                this.dataContext.Entry(newCategoryCity).State = EntityState.Modified;
-                await this.dataContext.SaveChangesAsync();
+                return mapper.Map<CategoryCity, CategoryCityResponseDto>(newCity);
             }
             return newCategoryCity;
         }
 
-        public async Task<CategoryCity> EditCategoryCity(int id, CategoryCityDto categoryCityDto)
+        public async Task<int> countAll(StatusEnum statusEnum, string keyWord)
         {
-            CategoryCity newCategoryCity = await this.GetById(id);
+            var totalCities = await dataContext.CategoryCities.Where(city => city.Status == (int)statusEnum)
+                .Where(city => city.Name.Contains(keyWord ?? ""))
+                .CountAsync();
 
-            if (newCategoryCity != null && newCategoryCity.Status == 0)
+            return totalCities;
+        }
+
+        public async Task<CategoryCityResponseDto> DeleteCategoryCity(int id, Account account)
+        {
+            CategoryCity existCity = await dataContext.CategoryCities.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (existCity != null)
             {
-                newCategoryCity.Name = categoryCityDto.Name;
-                newCategoryCity.ShortName = categoryCityDto.ShortName;;
-                
-                this.dataContext.Update(newCategoryCity);
+                existCity.Status = (int)StatusEnum.DELETED;
+                existCity.UpdatedDate = DateTime.Now;
+                existCity.UpdatedAccount = account;
                 await this.dataContext.SaveChangesAsync();
             }
-            return newCategoryCity;
+            return mapper.Map<CategoryCity, CategoryCityResponseDto>(existCity);
         }
 
-        public async Task<List<CategoryCity>> GetAll()
+        public async Task<CategoryCityResponseDto> EditCategoryCity(int id, CategoryCityRequestDto categoryCityDto, Account account)
         {
-            return await dataContext.CategoryCities.ToListAsync();
+            CategoryCity existCity = await dataContext.CategoryCities.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (existCity != null)
+            {
+                existCity.Name = categoryCityDto.Name;
+                existCity.ShortName = categoryCityDto.ShortName;
+                existCity.UpdatedDate = DateTime.Now;
+                existCity.UpdatedAccount = account;
+                this.dataContext.Update(existCity);
+                await this.dataContext.SaveChangesAsync();
+            }
+            return mapper.Map<CategoryCity, CategoryCityResponseDto>(existCity);
         }
 
-        public async Task<CategoryCity> GetById(int id)
+        public async Task<List<CategoryCityResponseDto>> GetAll(StatusEnum statusEnum, string keyword, int page, int pagesize)
         {
-            return dataContext.CategoryCities.FirstOrDefault(c => c.Id == id);
+            var listCategoryCities = await dataContext.CategoryCities.Where(categorycity => categorycity.Status == (int)statusEnum)
+               .Where(categorycity => categorycity.Name.Contains(keyword ?? ""))
+               .Skip(page * pagesize)
+               .Take(pagesize)
+               .OrderBy(categorycity => categorycity.Name)
+               .ToListAsync();
+
+            return mapper.Map<List<CategoryCity>, List<CategoryCityResponseDto>>(listCategoryCities);
+        }
+
+        public async Task<CategoryCityResponseDto> GetById(int id)
+        {
+            var existCity = await dataContext.CategoryCities.Where(c => c.Id == id).FirstOrDefaultAsync();
+            return mapper.Map<CategoryCity, CategoryCityResponseDto>(existCity);
+        }
+
+        public async Task<List<CategoryCityResponseDto>> GetCategoryCityActive(string keyword, int page, int pagesize)
+        {
+            var listCategoryCities = await dataContext.CategoryCities.Where(categorycity => categorycity.Status == (int)StatusEnum.APPROVED)
+                .Where(categorycity => categorycity.Name.Contains(keyword ?? ""))
+                .Skip(page * pagesize)
+                .Take(pagesize)
+                .OrderBy(categorycity => categorycity.Name)
+                .ToListAsync();
+
+            return mapper.Map<List<CategoryCity>, List<CategoryCityResponseDto>>(listCategoryCities);
+        }
+
+        public async Task<List<CategoryCityResponseDto>> GetCategoryCityDeleted(string keyword, int page, int pagesize)
+        {
+            var listCategoryCities = await dataContext.CategoryCities.Where(categorycity => categorycity.Status == (int)StatusEnum.DELETED)
+                .Where(categorycity => categorycity.Name.Contains(keyword ?? ""))
+                .Skip(page * pagesize)
+                .Take(pagesize)
+                .OrderBy(categorycity => categorycity.Name)
+                .ToListAsync();
+
+            return mapper.Map<List<CategoryCity>, List<CategoryCityResponseDto>>(listCategoryCities);
         }
 
         public async Task<List<CategoryCity>> GetCategoryCityActive()
         {
-            return dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DRAFT).ToList();
+            return await dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DRAFT).ToListAsync();
         }
 
         public async Task<List<CategoryCity>> GetCategoryCityDeleted()
         {
-            return dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DELETED).ToList();
+            return await dataContext.CategoryCities.Where(c => c.Status == (int)StatusEnum.DELETED).ToListAsync();
         }
     }
 }
