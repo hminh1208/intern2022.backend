@@ -60,5 +60,29 @@ namespace WebApi.Controllers
             LanguageResponseDto result = await _languageService.DeleteAsync(id, Account);
             return Ok(result);
         }
+        [HttpGet("search/{searchString}")]
+        public async Task<ActionResult<List<object>>> search(string keyword, string searchString)
+        { 
+            var language = await _languageService.SearchLanguage(StatusEnum.APPROVED, keyword, 0, 10, searchString);
+            var total = await _languageService.countAll(StatusEnum.APPROVED, keyword);
+            return Ok(new
+            {
+                Results = language,
+                Total = total
+            }
+            );
+        }
+        [HttpGet("sort/{sortValue}")]
+        public async Task<ActionResult<List<object>>> sort(string keyword, string sortValue)
+        {
+            var language = await _languageService.SortLanguage(StatusEnum.APPROVED, keyword, 0, 10, sortValue);
+            var total = await _languageService.countAll(StatusEnum.APPROVED, keyword);
+            return Ok(new
+            {
+                Results = language,
+                Total = total
+            }
+            );
+        }
     }
 }
