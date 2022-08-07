@@ -2,6 +2,7 @@
 using WebApi.Authorization;
 using WebApi.Enums;
 using WebApi.Models.Category;
+using WebApi.Models.Common;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,6 +13,7 @@ namespace WebApi.Controllers
     public class CategoriesController : BaseController
     {
         private readonly ICategoryService _categoryService;
+        private ApiResponseDto responseDto = new ApiResponseDto();
 
         public CategoriesController(ICategoryService categoryService)
         {
@@ -21,45 +23,83 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<ApiResponseDto>> GetApprovedAsync(string keyword, int page = 0, int pageSize = 10)
         {
-            var categories = await _categoryService.getAll(StatusEnum.APPROVED, keyword, page, pageSize);
-            var total = await _categoryService.countAll(StatusEnum.APPROVED, keyword);
-            return new ApiResponseDto(categories, total);
+            var categories = await _categoryService.GetAll(StatusEnum.APPROVED, keyword, page, pageSize);
+            var total = await _categoryService.CountAll(StatusEnum.APPROVED, keyword);
+
+            responseDto.Results = new PaginationResponseDto
+            {
+                Items = categories,
+                TotalCount = total,
+                CurrentPage = page,
+                PageSize = pageSize
+            };
+
+            return responseDto;
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CategoryResponseDto>> GetAsync(int id)
+        public async Task<ActionResult<ApiResponseDto>> GetAsync(int id)
         {
-            var categories = await _categoryService.getById(id);
-            return Ok(categories);
+            var categoryItem = await _categoryService.GetById(id);
+            responseDto.Results = new SingleItemResponseDto
+            {
+                Item = categoryItem,
+            };
+            responseDto.StatusCode = categoryItem is not null ? 200 : 404;
+
+            return responseDto;
         }
 
         [HttpPost]
-        public async Task<ActionResult<CategoryResponseDto>> addAsync([FromBody]CategoryRequestDto cityDto)
+        public async Task<ActionResult<ApiResponseDto>> AddAsync(CategoryRequestDto cityDto)
         {
             CategoryResponseDto result = null;
+
             if (ModelState.IsValid)
             {
-                result = await _categoryService.addAsync(cityDto, Account);
+                result = await _categoryService.AddAsync(cityDto, Account);
+
+                responseDto.Results = new SingleItemResponseDto
+                {
+                    Item = result,
+                };
             }
-            return Ok(result);
+
+            return responseDto;
         }
 
         [HttpPost("{id}")]
-        public async Task<ActionResult<CategoryResponseDto>> updateAsync(int id, [FromBody] CategoryRequestDto cityDto)
+        public async Task<ActionResult<ApiResponseDto>> updateAsync(int id, [FromBody] CategoryRequestDto cityDto)
         {
             CategoryResponseDto result = null;
             if (ModelState.IsValid)
             {
                 result = await _categoryService.updateAsync(id, cityDto, Account);
+
+                responseDto.Results = new SingleItemResponseDto
+                {
+                    Item = result,
+                };
             }
-            return Ok(result);
+            else
+            {
+                responseDto.Results = ModelState.Values.SelectMany(v => v.Errors);
+                responseDto.StatusCode = 400;
+            }
+            return responseDto;
         }
     
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CategoryResponseDto>> deleteAsync(int id)
+        public async Task<ActionResult<ApiResponseDto>> deleteAsync(int id)
         {
             CategoryResponseDto result = await _categoryService.deleteAsync(id, Account);
-            return Ok(result);
+
+            responseDto.Results = new SingleItemResponseDto
+            {
+                Item = result,
+            };
+
+            return responseDto;
         }
     }
 }

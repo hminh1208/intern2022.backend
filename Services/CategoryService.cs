@@ -7,10 +7,10 @@ namespace WebApi.Services
 {
     public interface ICategoryService
     {
-        Task<List<CategoryResponseDto>> getAll(StatusEnum statusEnum, string keyWord, int page, int pageSize);
-        Task<int> countAll(StatusEnum statusEnum, string keyWord);
-        Task<CategoryResponseDto> getById(int id);
-        Task<CategoryResponseDto> addAsync(CategoryRequestDto CategoryDto, Account account);
+        Task<List<CategoryResponseDto>> GetAll(StatusEnum statusEnum, string keyWord, int page, int pageSize);
+        Task<int> CountAll(StatusEnum statusEnum, string keyWord);
+        Task<CategoryResponseDto> GetById(int id);
+        Task<CategoryResponseDto> AddAsync(CategoryRequestDto CategoryDto, Account account);
         Task<CategoryResponseDto> updateAsync(int id, CategoryRequestDto CategoryDto, Account account);
         Task<CategoryResponseDto> deleteAsync(int id, Account account);
     }
@@ -26,7 +26,7 @@ namespace WebApi.Services
             _mapper = mapper;
         }
 
-        public async Task<CategoryResponseDto> addAsync(CategoryRequestDto CategoryDto, Account account)
+        public async Task<CategoryResponseDto> AddAsync(CategoryRequestDto CategoryDto, Account account)
         {
             Category newCategory = new Category(CategoryDto.Name, CategoryDto.ParentId, account);
             this._context.Add(newCategory);
@@ -38,8 +38,9 @@ namespace WebApi.Services
             {
                 Console.WriteLine(e.ToString());
             }
-            
-            return _mapper.Map<Category, CategoryResponseDto>(newCategory);
+
+            var item = _mapper.Map<Category, CategoryResponseDto>(newCategory);
+            return item;
         }
 
         public async Task<CategoryResponseDto> deleteAsync(int id, Account account)
@@ -55,7 +56,7 @@ namespace WebApi.Services
             return _mapper.Map<Category, CategoryResponseDto>(existCategory);
         }
 
-        public async Task<List<CategoryResponseDto>> getAll(StatusEnum statusEnum, string keyWord, int page, int pageSize)
+        public async Task<List<CategoryResponseDto>> GetAll(StatusEnum statusEnum, string keyWord, int page, int pageSize)
         {
             var listCities = await _context.Categories.Where(Category => Category.Status == statusEnum)
                 .Where(Category => Category.Name.Contains(keyWord ?? ""))
@@ -67,7 +68,7 @@ namespace WebApi.Services
             return _mapper.Map<List<Category>, List<CategoryResponseDto>>(listCities);
         }
 
-        public async Task<int> countAll(StatusEnum statusEnum, string keyWord)
+        public async Task<int> CountAll(StatusEnum statusEnum, string keyWord)
         {
             var totalCities = await _context.Categories.Where(Category => Category.Status == statusEnum)
                 .Where(Category => Category.Name.Contains(keyWord ?? ""))
@@ -76,7 +77,7 @@ namespace WebApi.Services
             return totalCities;
         }
 
-        public async Task<CategoryResponseDto> getById(int id)
+        public async Task<CategoryResponseDto> GetById(int id)
         {
             var existCategory = await _context.Categories.Where(c => c.Id == id).FirstOrDefaultAsync();
             return _mapper.Map<Category, CategoryResponseDto>(existCategory);

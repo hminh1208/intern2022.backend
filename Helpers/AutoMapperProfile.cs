@@ -3,6 +3,9 @@ namespace WebApi.Helpers;
 using AutoMapper;
 using WebApi.Entities;
 using WebApi.Models.Accounts;
+using WebApi.Models.Category;
+using AutoMapper.Extensions.EnumMapping;
+using WebApi.Enums;
 
 public class AutoMapperProfile : Profile
 {
@@ -16,6 +19,8 @@ public class AutoMapperProfile : Profile
         CreateMap<RegisterRequest, Account>();
 
         CreateMap<CreateRequest, Account>();
+
+        CreateMap<Category, CategoryResponseDto>();
 
         //CreateMap<UpdateRequest, Account>()
         //    .ForAllMembers(x => x.Condition(

@@ -20,16 +20,37 @@ public class DataContext : DbContext
 
 
     private readonly IConfiguration Configuration;
+    private DbContextOptionsBuilder<DataContext> options;
+    private string contextType = "Default";
 
     public DataContext(IConfiguration configuration)
     {
         Configuration = configuration;
     }
 
+    public DataContext(DbContextOptionsBuilder<DataContext> options)
+    {
+        this.options = options;
+    }
+
+    public DataContext(DbContextOptionsBuilder<DataContext> options, string contextType)
+    {
+        this.options = options;
+        this.contextType = contextType;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         // connect to sqlite database
-        options.UseSqlServer(Configuration.GetConnectionString("WebApiDatabase"));
+        if(contextType.Equals("Default"))
+        {
+            options.UseSqlServer(Configuration.GetConnectionString("WebApiDatabase"));
+        }
+        else
+        {
+            //options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
+            options.UseSqlite("Data Source=Database" + Guid.NewGuid().ToString() + ".db");
+        }
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
