@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Helpers;
 
@@ -11,9 +12,10 @@ using WebApi.Helpers;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220803091800_AddCategoryEntity")]
+    partial class AddCategoryEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -112,9 +114,6 @@ namespace WebApi.Migrations
                     b.Property<string>("Slug")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("UpdatedAccountId")
                         .HasColumnType("uniqueidentifier");
@@ -297,45 +296,6 @@ namespace WebApi.Migrations
 
                     b.ToTable("Gendermanagemet");
                 });
-            modelBuilder.Entity("WebApi.Entities.Language", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
-
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                b.Property<Guid>("CreatedAccountId")
-                    .HasColumnType("uniqueidentifier");
-
-                b.Property<DateTime>("CreatedDate")
-                    .HasColumnType("datetime2");
-
-                b.Property<string>("ShortName")
-                   .HasMaxLength(10)
-                   .HasColumnType("nvarchar(10)");
-
-                b.Property<string>("Name")
-                    .HasMaxLength(500)
-                    .HasColumnType("nvarchar(500)");
-
-                b.Property<int>("Status")
-                    .HasColumnType("int");
-
-                b.Property<Guid>("UpdatedAccountId")
-                    .HasColumnType("uniqueidentifier");
-
-                b.Property<DateTime>("UpdatedDate")
-                    .HasColumnType("datetime2");
-
-                b.HasKey("Id");
-
-                b.HasIndex("CreatedAccountId");
-
-                b.HasIndex("UpdatedAccountId");
-
-                b.ToTable("Languages");
-            });
 
             modelBuilder.Entity("WebApi.Entities.Role", b =>
                 {
@@ -517,31 +477,10 @@ namespace WebApi.Migrations
                     b.Navigation("UpdatedAccount");
                 });
 
-            modelBuilder.Entity("WebApi.Entities.Language", b =>
-            {
-                b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                    .WithMany()
-                    .HasForeignKey("CreatedAccountId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-
-                b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                    .WithMany()
-                    .HasForeignKey("UpdatedAccountId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-
-                b.Navigation("CreatedAccount");
-
-                b.Navigation("UpdatedAccount");
-            });
-
-
             modelBuilder.Entity("WebApi.Entities.Category", b =>
                 {
                     b.Navigation("SubCategories");
                 });
-
 #pragma warning restore 612, 618
         }
     }

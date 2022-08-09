@@ -3,31 +3,31 @@ using WebApi.Enums;
 
 namespace WebApi.Entities
 {
-    public class City : BaseEntity
-    { 
-        public City()
+    public class CategoryCity : BaseEntity
+    {
+        public CategoryCity()
         {
 
         }
-
-        public City(string newName, string newAbbName, Account account)
+        public CategoryCity(string newName, string newShortName, Account account)
         {
             this.Name = newName;
-            this.AbbName = newAbbName;
+            this.ShortName = newShortName;
             this.CreatedAccount = account;
             this.UpdatedAccount = account;
             this.CreatedDate = DateTime.Now;
             this.UpdatedDate = DateTime.Now;
-            this.Status = StatusEnum.APPROVED;
+            this.Status = (int)StatusEnum.APPROVED;
         }
-
 
         [Key]
         public int Id { get; set; }
+        [Required]
         [MaxLength(500)]
         public string Name { get; set; }
-        [MaxLength(10)]
-        public string AbbName { get; set; }
-        public StatusEnum Status { get; set; }
+        [Required]
+        [MaxLength(5)]
+        public string ShortName { get; set; }
+        public int Status { get; set; }
     }
 }

@@ -10,7 +10,7 @@ using WebApi.Services;
 
 [Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AccountsController : BaseController
 {
     private readonly IAccountService _accountService;
@@ -31,9 +31,9 @@ public class AccountsController : BaseController
 
     [AllowAnonymous]
     [HttpPost("refresh-token")]
-    public ActionResult<AuthenticateResponse> RefreshToken()
+    public ActionResult<AuthenticateResponse> RefreshToken(AuthenticateRefreshTokenRequest model)
     {
-        var refreshToken = Request.Cookies["refreshToken"];
+        var refreshToken = model.RefreshToken;
         var response = _accountService.RefreshToken(refreshToken, ipAddress());
         setTokenCookie(response.RefreshToken);
         return Ok(response);

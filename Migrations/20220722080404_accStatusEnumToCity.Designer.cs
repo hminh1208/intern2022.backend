@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApi.Helpers;
 
@@ -11,9 +12,10 @@ using WebApi.Helpers;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220722080404_accStatusEnumToCity")]
+    partial class accStatusEnumToCity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,52 +89,6 @@ namespace WebApi.Migrations
                     b.ToTable("Accounts");
                 });
 
-            modelBuilder.Entity("WebApi.Entities.Category", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<Guid>("CreatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int?>("ParentId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Slug")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("UpdatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CreatedAccountId");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("UpdatedAccountId");
-
-                    b.ToTable("Categories");
-                });
-
             modelBuilder.Entity("WebApi.Entities.CategoryCity", b =>
                 {
                     b.Property<int>("Id")
@@ -140,12 +96,6 @@ namespace WebApi.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<Guid>("CreatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -160,17 +110,7 @@ namespace WebApi.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UpdatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedAccountId");
-
-                    b.HasIndex("UpdatedAccountId");
 
                     b.ToTable("CategoryCities");
                 });
@@ -270,72 +210,17 @@ namespace WebApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<Guid>("CreatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Name")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("UpdatedAccountId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedDate")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedAccountId");
-
-                    b.HasIndex("UpdatedAccountId");
 
                     b.ToTable("Gendermanagemet");
                 });
-            modelBuilder.Entity("WebApi.Entities.Language", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
-
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                b.Property<Guid>("CreatedAccountId")
-                    .HasColumnType("uniqueidentifier");
-
-                b.Property<DateTime>("CreatedDate")
-                    .HasColumnType("datetime2");
-
-                b.Property<string>("ShortName")
-                   .HasMaxLength(10)
-                   .HasColumnType("nvarchar(10)");
-
-                b.Property<string>("Name")
-                    .HasMaxLength(500)
-                    .HasColumnType("nvarchar(500)");
-
-                b.Property<int>("Status")
-                    .HasColumnType("int");
-
-                b.Property<Guid>("UpdatedAccountId")
-                    .HasColumnType("uniqueidentifier");
-
-                b.Property<DateTime>("UpdatedDate")
-                    .HasColumnType("datetime2");
-
-                b.HasKey("Id");
-
-                b.HasIndex("CreatedAccountId");
-
-                b.HasIndex("UpdatedAccountId");
-
-                b.ToTable("Languages");
-            });
 
             modelBuilder.Entity("WebApi.Entities.Role", b =>
                 {
@@ -418,48 +303,6 @@ namespace WebApi.Migrations
                     b.Navigation("RefreshTokens");
                 });
 
-            modelBuilder.Entity("WebApi.Entities.Category", b =>
-                {
-                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                        .WithMany()
-                        .HasForeignKey("CreatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Entities.Category", null)
-                        .WithMany("SubCategories")
-                        .HasForeignKey("ParentId");
-
-                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                        .WithMany()
-                        .HasForeignKey("UpdatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedAccount");
-
-                    b.Navigation("UpdatedAccount");
-                });
-
-            modelBuilder.Entity("WebApi.Entities.CategoryCity", b =>
-                {
-                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                        .WithMany()
-                        .HasForeignKey("CreatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                        .WithMany()
-                        .HasForeignKey("UpdatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedAccount");
-
-                    b.Navigation("UpdatedAccount");
-                });
-
             modelBuilder.Entity("WebApi.Entities.City", b =>
                 {
                     b.HasOne("WebApi.Entities.Account", "CreatedAccount")
@@ -497,51 +340,6 @@ namespace WebApi.Migrations
 
                     b.Navigation("UpdatedAccount");
                 });
-
-            modelBuilder.Entity("WebApi.Entities.Gendermanagement", b =>
-                {
-                    b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                        .WithMany()
-                        .HasForeignKey("CreatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                        .WithMany()
-                        .HasForeignKey("UpdatedAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("CreatedAccount");
-
-                    b.Navigation("UpdatedAccount");
-                });
-
-            modelBuilder.Entity("WebApi.Entities.Language", b =>
-            {
-                b.HasOne("WebApi.Entities.Account", "CreatedAccount")
-                    .WithMany()
-                    .HasForeignKey("CreatedAccountId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-
-                b.HasOne("WebApi.Entities.Account", "UpdatedAccount")
-                    .WithMany()
-                    .HasForeignKey("UpdatedAccountId")
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .IsRequired();
-
-                b.Navigation("CreatedAccount");
-
-                b.Navigation("UpdatedAccount");
-            });
-
-
-            modelBuilder.Entity("WebApi.Entities.Category", b =>
-                {
-                    b.Navigation("SubCategories");
-                });
-
 #pragma warning restore 612, 618
         }
     }

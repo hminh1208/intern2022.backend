@@ -1,19 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
-using WebApi.Enums;
-
+﻿using WebApi.Enums;
+using System.ComponentModel.DataAnnotations;
 namespace WebApi.Entities
 {
-    public class City : BaseEntity
-    { 
-        public City()
+    public class Language : BaseEntity
+    {
+        public Language()
         {
 
         }
 
-        public City(string newName, string newAbbName, Account account)
+        public Language(string newName, string newShortName, Account account)
         {
             this.Name = newName;
-            this.AbbName = newAbbName;
+            this.ShortName = newShortName;
             this.CreatedAccount = account;
             this.UpdatedAccount = account;
             this.CreatedDate = DateTime.Now;
@@ -27,7 +26,8 @@ namespace WebApi.Entities
         [MaxLength(500)]
         public string Name { get; set; }
         [MaxLength(10)]
-        public string AbbName { get; set; }
+        public string ShortName { get; set; }
         public StatusEnum Status { get; set; }
     }
+
 }

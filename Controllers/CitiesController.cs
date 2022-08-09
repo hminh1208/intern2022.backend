@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebApi.Authorization;
+using WebApi.Enums;
+using WebApi.Models.Category;
 using WebApi.Models.Cities;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -7,8 +9,9 @@ using WebApi.Models.Cities;
 namespace WebApi.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class CitiesController : ControllerBase
+    [ApiController] 
+    
+    public class CitiesController : BaseController
     {
         private readonly ICityService _cityService;
 
@@ -18,45 +21,54 @@ namespace WebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<City>> Get()
+        public async Task<ActionResult<object>> GetApprovedAsync(string keyword, int page = 0, int pageSize = 10)
         {
-            var cities = _cityService.getAll();
-            return Ok(cities);
+            var cities = await _cityService.getAll(StatusEnum.APPROVED, keyword, page, pageSize);
+            var total = await _cityService.countAll(StatusEnum.APPROVED, keyword);
+            return Ok(new
+                {
+                    Results = cities,
+                    Total = total,
+            }
+            );
         }
 
         [HttpGet("{id}")]
-        public ActionResult<City> Get(int id)
+        public async Task<ActionResult<CityResponseDto>> GetAsync(int id)
         {
-            var cities = _cityService.getById(id);
+            var cities = await _cityService.getById(id);
             return Ok(cities);
         }
 
+        [Authorize]
         [HttpPost]
-        public ActionResult<City> add([FromBody]CityDto cityDto)
+        public async Task<ActionResult<CityResponseDto>> addAsync([FromBody]CityRequestDto cityDto)
         {
-            City result = null;
+            CityResponseDto result = null;
             if (ModelState.IsValid)
             {
-                result = _cityService.add(cityDto);
+                result = await _cityService.addAsync(cityDto, Account);
             }
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPost("{id}")]
-        public ActionResult<City> update(int id, [FromBody] CityDto cityDto)
+        public async Task<ActionResult<CityResponseDto>> updateAsync(int id, [FromBody] CityRequestDto cityDto)
         {
-            City result = null;
+            CityResponseDto result = null;
             if (ModelState.IsValid)
             {
-                result = _cityService.update(id, cityDto);
+                result = await _cityService.updateAsync(id, cityDto, Account);
             }
             return Ok(result);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
-        public ActionResult<City> delete(int id)
+        public async Task<ActionResult<CityResponseDto>> deleteAsync(int id)
         {
-            City result = _cityService.delete(id);
+            CityResponseDto result = await _cityService.deleteAsync(id, Account);
             return Ok(result);
         }
     }
