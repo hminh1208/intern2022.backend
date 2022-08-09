@@ -10,7 +10,7 @@ Tổng hợp link các repo có liên quan:
 - Web Portal: https://github.com/hminh1208/intern2022.portal (WIP)
 
 Kỳ thực tập 06/2022 - 08/2022:
-##Backend:
+## Backend:
 -Trần Thế Nam
 -Vỏ Thị Họa My
 -Hoàng Thị Mai Linh
@@ -19,7 +19,7 @@ Kỳ thực tập 06/2022 - 08/2022:
 -Trịnh Minh Anh
 -Lê Hoàng Phúc Tâm
 
-##Frontend:
+## Frontend:
 -Trần Văn Trình
 -Phan Văn Khải
 -Võ Trần Anh Khoa
