@@ -10,18 +10,18 @@ Tổng hợp link các repo có liên quan:
 - Web Portal: https://github.com/hminh1208/intern2022.portal (WIP)
 
 ## Kỳ thực tập 06/2022 - 08/2022:
-| Họ và Tên | Vị trí |
-| ----------- | ----------- |
-| Trần Thế Nam | Frontend |
-| Vỏ Thị Họa My | Frontend |
-| Hoàng Thị Mai Linh | Frontend |
-| Đào Thị Thúy Ngân  | Frontend |
-| Ngô Minh Quân | Frontend |
-| Trịnh Minh Anh | Frontend |
-| Lê Hoàng Phúc Tâm | Frontend |
-|  |  |
-| Trần Văn Trình | Backend |
-| Phan Văn Khải | Backend |
-| Võ Trần Anh Khoa | Backend |
-| Lê Kim Quốc Chung | Backend |
-| Nguyễn Sinh Hùng | Backend |
+| Họ và Tên | Vị trí | GitHub Link |
+| ----------- | ----------- | ----------- |
+| Trần Thế Nam | Frontend | https://github.com/tranthenam-pfiev |
+| Vỏ Thị Họa My | Frontend | https://github.com/myvth2 |
+| Hoàng Thị Mai Linh | Frontend | https://github.com/mailinh221100 |
+| Đào Thị Thúy Ngân  | Frontend | https://github.com/ThuyNgan22dk |
+| Ngô Minh Quân | Frontend | https://github.com/mquan247 |
+| Trịnh Minh Anh | Frontend |  |
+| Lê Hoàng Phúc Tâm | Frontend |  |
+|  |  | |
+| Trần Văn Trình | Backend |  |
+| Phan Văn Khải | Backend | https://github.com/khaiphan1001 |
+| Võ Trần Anh Khoa | Backend | https://github.com/Kingg145 |
+| Lê Kim Quốc Chung | Backend | https://github.com/leChung45K14 |
+| Nguyễn Sinh Hùng | Backend | https://github.com/hungns021001 |
