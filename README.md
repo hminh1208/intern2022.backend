@@ -11,11 +11,10 @@ Tổng hợp link các repo có liên quan:
 
 Kỳ thực tập 06/2022 - 08/2022:
 
-<img src="https://user-images.githubusercontent.com/9678113/183552215-52900181-7104-4efd-91d2-d4edfb33295a.jpg" width="18%"></img> 
-<a href="https://github.com/tranthenam-pfiev">Trần Thế Nam</a>
-<img src="https://user-images.githubusercontent.com/9678113/183552219-01ad92f2-0818-446a-90ed-bc42c32615d4.jpg" width="18%"></img> 
-<a href="https://github.com/myvth2">Vỏ Thị Họa My</a>
-<img src="https://user-images.githubusercontent.com/9678113/183552220-0cbd701c-a11d-4ab6-b80b-9abe369f0dca.jpg" width="18%"></img> 
-<a href="https://github.com/hungns021001">Nguyễn Sinh Hùng</a>
-<img src="https://user-images.githubusercontent.com/9678113/183552222-ef1050e6-bcca-48f2-b51d-0e15fdb728dd.jpg" width="18%"></img> 
-<a href="https://github.com/mailinh221100">Hoàng Thị Mai Linh</a>
+<img src="https://user-images.githubusercontent.com/9678113/183552215-52900181-7104-4efd-91d2-d4edfb33295a.jpg" width="18%"><a href="https://github.com/tranthenam-pfiev">Trần Thế Nam</a></img> 
+
+<img src="https://user-images.githubusercontent.com/9678113/183552219-01ad92f2-0818-446a-90ed-bc42c32615d4.jpg" width="18%"><a href="https://github.com/myvth2">Vỏ Thị Họa My</a></img> 
+
+<img src="https://user-images.githubusercontent.com/9678113/183552220-0cbd701c-a11d-4ab6-b80b-9abe369f0dca.jpg" width="18%"><a href="https://github.com/hungns021001">Nguyễn Sinh Hùng</a></img> 
+
+<img src="https://user-images.githubusercontent.com/9678113/183552222-ef1050e6-bcca-48f2-b51d-0e15fdb728dd.jpg" width="18%"><a href="https://github.com/mailinh221100">Hoàng Thị Mai Linh</a></img> 
