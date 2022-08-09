@@ -12,6 +12,8 @@ namespace WebApi.Services
         Task<LanguageResponseDto> AddAsync(LanguageRequestDto languageRequestDto, Account account);
         Task<LanguageResponseDto> UpdateAsync(int id, LanguageRequestDto languageRequestDto, Account account);
         Task<LanguageResponseDto> DeleteAsync(int id, Account account);
+        Task<List<LanguageResponseDto>> SearchLanguage(StatusEnum statusEnum, string keyWord, int page, int pageSize, string searchString);
+        Task<List<LanguageResponseDto>> SortLanguage(StatusEnum statusEnum, string keyWord, int page, int pageSize, string sortValue);
     }
     public class LanguageService : ILanguageService
     {
@@ -95,6 +97,38 @@ namespace WebApi.Services
                 }
             }
             return _mapper.Map<Language, LanguageResponseDto>(existLanguage);
+        }
+        public async Task<List<LanguageResponseDto>> SearchLanguage(StatusEnum statusEnum, string keyWord, int page, int pageSize, string searchString)
+        {
+            var listLanguage = await _dataContext.Languages.Where(language => language.Status == statusEnum && 
+                    (language.Name.Contains(searchString) || 
+                        language.ShortName.Contains(searchString)))
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .OrderBy(language => language.Name)
+                .ToListAsync();
+            return _mapper.Map<List<Language>, List<LanguageResponseDto>>(listLanguage);
+        }
+        public async Task<List<LanguageResponseDto>> SortLanguage(StatusEnum statusEnum, string keyWord, int page, int pageSize, string sortValue)
+        {
+            var listLanguage = from s in _dataContext.Languages select s;
+            switch (sortValue)
+            {
+                case "name_desc":
+                    listLanguage = listLanguage.OrderByDescending(s => s.Name);
+                    break;
+                case "shortName":
+                    listLanguage = listLanguage.OrderBy(s => s.ShortName);
+                    break;
+                case "shortName_desc":
+                    listLanguage = listLanguage.OrderByDescending(s => s.ShortName);
+                    break;
+                default:
+                    listLanguage = listLanguage.OrderBy(s => s.Name);
+                    break;
+            }
+
+            return _mapper.Map<List<Language>, List<LanguageResponseDto>>(await listLanguage.ToListAsync());
         }
     }
 
