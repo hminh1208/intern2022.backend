@@ -11,17 +11,17 @@ Tổng hợp link các repo có liên quan:
 
 Kỳ thực tập 06/2022 - 08/2022:
 ## Backend:
--Trần Thế Nam
--Vỏ Thị Họa My
--Hoàng Thị Mai Linh
--Đào Thị Thúy Ngân 
--Ngô Minh Quân
--Trịnh Minh Anh
--Lê Hoàng Phúc Tâm
+- Trần Thế Nam
+- Vỏ Thị Họa My
+- Hoàng Thị Mai Linh
+- Đào Thị Thúy Ngân 
+- Ngô Minh Quân
+- Trịnh Minh Anh
+- Lê Hoàng Phúc Tâm
 
 ## Frontend:
--Trần Văn Trình
--Phan Văn Khải
--Võ Trần Anh Khoa
--Lê Kim Quốc Chung
--Nguyễn Sinh Hùng
+- Trần Văn Trình
+- Phan Văn Khải
+- Võ Trần Anh Khoa
+- Lê Kim Quốc Chung
+- Nguyễn Sinh Hùng
