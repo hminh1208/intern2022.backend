@@ -9,19 +9,19 @@ Tổng hợp link các repo có liên quan:
 - Web Frontend: https://github.com/hminh1208/intern2022.admin
 - Web Portal: https://github.com/hminh1208/intern2022.portal (WIP)
 
-Kỳ thực tập 06/2022 - 08/2022:
-## Backend:
-- Trần Thế Nam
-- Vỏ Thị Họa My
-- Hoàng Thị Mai Linh
-- Đào Thị Thúy Ngân 
-- Ngô Minh Quân
-- Trịnh Minh Anh
-- Lê Hoàng Phúc Tâm
-
-## Frontend:
-- Trần Văn Trình
-- Phan Văn Khải
-- Võ Trần Anh Khoa
-- Lê Kim Quốc Chung
-- Nguyễn Sinh Hùng
+## Kỳ thực tập 06/2022 - 08/2022:
+| Họ và Tên | Vị trí |
+| ----------- | ----------- |
+| Trần Thế Nam | Frontend |
+| Vỏ Thị Họa My | Frontend |
+| Hoàng Thị Mai Linh | Frontend |
+| Đào Thị Thúy Ngân  | Frontend |
+| Ngô Minh Quân | Frontend |
+| Trịnh Minh Anh | Frontend |
+| Lê Hoàng Phúc Tâm | Frontend |
+|  |  |
+| Trần Văn Trình | Backend |
+| Phan Văn Khải | Backend |
+| Võ Trần Anh Khoa | Backend |
+| Lê Kim Quốc Chung | Backend |
+| Nguyễn Sinh Hùng | Backend |
