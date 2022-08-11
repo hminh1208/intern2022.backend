@@ -8,6 +8,34 @@ namespace WebApi.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<Guid>(
+               name: "CreatedAccountId",
+               table: "Gendermanagemet",
+               type: "uniqueidentifier",
+               nullable: false,
+               defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "CreatedDate",
+                table: "Gendermanagemet",
+                type: "datetime2",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
+            migrationBuilder.AddColumn<Guid>(
+                name: "UpdatedAccountId",
+                table: "Gendermanagemet",
+                type: "uniqueidentifier",
+                nullable: false,
+                defaultValue: new Guid("00000000-0000-0000-0000-000000000000"));
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "UpdatedDate",
+                table: "Gendermanagemet",
+                type: "datetime2",
+                nullable: false,
+                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+
             migrationBuilder.AddForeignKey(
                name: "FK_Gendermanagemet_Accounts_CreatedAccountId",
                table: "Gendermanagemet",

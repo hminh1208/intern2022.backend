@@ -22,14 +22,12 @@ namespace WebApi.UnitTest
 
         public CategoryServiceTest()
         {
-            var options = new DbContextOptionsBuilder<DataContext>().UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
-
-            _dbContext = new DataContext(options, "Testing");
+            _dbContext = new DataContext("Testing");
             _dbContext.Database.EnsureCreated();
 
             var mockMapper = new MapperConfiguration(cfg =>
             {
-                cfg.AddProfile(new AutoMapperProfile()); //your automapperprofile 
+                cfg.AddProfile(new AutoMapperProfile());
             });
             _mapper = mockMapper.CreateMapper();
 
@@ -63,12 +61,6 @@ namespace WebApi.UnitTest
         public async Task CountAll_WithApprovedCategory_ReturnsNumberOfApprovedCategory()
         {
             // Arrange
-            //_dbContext.Accounts.Add(new Account());
-            //_dbContext.SaveChanges();
-            //var account = await _dbContext.Accounts.FirstOrDefaultAsync();
-            //_dbContext.Categories.AddRange(CategoryMockData.GenerateCategoriesMockData(account));
-            //_dbContext.SaveChanges();
-
             var categoryService = new CategoryService(_dbContext, _mapper);
 
             // Act
@@ -104,31 +96,25 @@ namespace WebApi.UnitTest
             Assert.Equal(result, CategoryMockData.NUMBER_OF_DELETED);
         }
 
-        //[Fact]
-        //public async Task GetAll_WithFirst5ApprovedCategory_ReturnsDeltedCategory()
-        //{
-        //    // Arrange
-        //    _dbContext.Accounts.Add(new Account());
-        //    _dbContext.SaveChanges();
-        //    var account = await _dbContext.Accounts.FirstOrDefaultAsync();
-        //    _dbContext.Categories.AddRange(CategoryMockData.GenerateCategoriesMockData(account));
-        //    _dbContext.SaveChanges();
+        [Fact]
+        public async Task GetAll_WithFirst5ApprovedCategory_ReturnsDeltedCategory()
+        {
+            // Arrange
+            var categoryService = new CategoryService(_dbContext, _mapper);
+            var expectedList = CategoryMockData.Categories.Where(item => item.Status == StatusEnum.APPROVED).Skip(0).Take(5).ToList();
 
-        //    var categoryService = new CategoryService(_dbContext, _mapper);
+            // Act
+            var result = await categoryService.GetAll(StatusEnum.APPROVED, "", 0, 5);
 
-        //    // Act
-        //    var result = await categoryService.GetAll(StatusEnum.DELETED, "", 0, 10);
-
-        //    // Assert
-        //    result.Should().HaveCount(numnb);
-        //}
+            // Assert
+            result.Should().BeEquivalentTo(expectedList, options => options.ExcludingMissingMembers());
+        }
 
         [Fact]
         public async Task GetById_WithExistingCategory_ReturnsExistingCategory()
         {
             // Arrange
             const int SELECTED_ID = 1;
-
             var categoryService = new CategoryService(_dbContext, _mapper);
 
             // Act
@@ -143,7 +129,6 @@ namespace WebApi.UnitTest
         {
             // Arrange
             const int SELECTED_ID = 999;
-
             var categoryService = new CategoryService(_dbContext, _mapper);
 
             // Act
@@ -160,20 +145,21 @@ namespace WebApi.UnitTest
             _dbContext.Accounts.Add(new Account());
             _dbContext.SaveChanges();
             var account = await _dbContext.Accounts.FirstOrDefaultAsync();
-
             var categoryRequestDto = new CategoryRequestDto()
             {
                 Name = "Category 11"
             };
-
             var categoryService = new CategoryService(_dbContext, _mapper);
 
             // Act
             var result = await categoryService.AddAsync(categoryRequestDto, account);
+            var expected = await categoryService.GetById(result.Id);
 
             // Assert
             Assert.NotNull(result);
+            Assert.NotEqual(0, result.Id);
             Assert.Equal(StatusEnum.APPROVED, result.Status);
+            result.Should().BeEquivalentTo(expected, options => options.ExcludingMissingMembers());
         }
     }
 }

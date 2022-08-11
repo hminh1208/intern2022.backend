@@ -13,13 +13,13 @@ namespace WebApi.UnitTest
         public const int NUMBER_OF_APPROVED = 10;
         public const int NUMBER_OF_DELETED= 10;
 
+        public static List<Category> Categories { get; set; } = new List<Category>();
+
         public static List<Category> GenerateCategoriesMockData(Account account)
         {
-            var categories = new List<Category>();
-
             for(int i = 1; i <= NUMBER_OF_APPROVED; i++)
             {
-                categories.Add(new Category()
+                Categories.Add(new Category()
                 {
                     Name = Guid.NewGuid().ToString(),
                     ParentId = null,
@@ -31,7 +31,7 @@ namespace WebApi.UnitTest
 
             for (int i = 1; i <= NUMBER_OF_DELETED; i++)
             {
-                categories.Add(new Category()
+                Categories.Add(new Category()
                 {
                     Name = Guid.NewGuid().ToString(),
                     ParentId = null,
@@ -41,7 +41,7 @@ namespace WebApi.UnitTest
                 });
             }
 
-            return categories;
+            return Categories;
         }
     }
 }
