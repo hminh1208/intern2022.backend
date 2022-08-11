@@ -33,9 +33,8 @@ public class DataContext : DbContext
         this.options = options;
     }
 
-    public DataContext(DbContextOptionsBuilder<DataContext> options, string contextType)
+    public DataContext(string contextType)
     {
-        this.options = options;
         this.contextType = contextType;
     }
 
@@ -48,7 +47,6 @@ public class DataContext : DbContext
         }
         else
         {
-            //options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString());
             options.UseSqlite("Data Source=Database" + Guid.NewGuid().ToString() + ".db");
         }
     }
